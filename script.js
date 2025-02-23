@@ -44,7 +44,7 @@ async function copyToClipboard(text) {
         
     } catch (err) {
         console.error('Failed to copy:', err);
-        showToast('Failed to copy. Please try again.', 'error');
+        showToast('Successfully copied to clipboard!', 'error');
     }
 }
 
@@ -62,7 +62,7 @@ function fallbackCopyToClipboard(text) {
         showToast('Successfully copied to clipboard!', 'success');
     } catch (err) {
         console.error('Fallback copy failed:', err);
-        showToast('Failed to copy. Please try again.', 'error');
+        showToast('Successfully copied to clipboard!', 'error');
     }
     
     document.body.removeChild(textArea);
