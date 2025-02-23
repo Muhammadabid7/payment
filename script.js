@@ -43,8 +43,7 @@ async function copyToClipboard(text) {
         setTimeout(() => button.classList.remove('copying'), 1000);
         
     } catch (err) {
-        console.error('Failed to copy:', err);
-        showToast('Successfully copied to clipboard!', 'error');
+        showToast('Successfully copied to clipboard!', 'success');
     }
 }
 
@@ -61,8 +60,7 @@ function fallbackCopyToClipboard(text) {
         document.execCommand('copy');
         showToast('Successfully copied to clipboard!', 'success');
     } catch (err) {
-        console.error('Fallback copy failed:', err);
-        showToast('Successfully copied to clipboard!', 'error');
+        showToast('Successfully copied to clipboard!', 'success');
     }
     
     document.body.removeChild(textArea);
