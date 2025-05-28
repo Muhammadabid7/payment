@@ -151,6 +151,7 @@ body {
     background: rgba(31, 58, 95, 0.15);
     opacity: 1;
 }
+
 /* Payment Header */
 .payment-header {
     display: flex;
@@ -306,6 +307,23 @@ body {
     background: rgba(31, 58, 95, 0.25);
 }
 
+/* Music Toggle Button */
+#music-toggle {
+    margin-top: 20px;
+    background: linear-gradient(135deg, rgba(23, 42, 69, 0.3), rgba(31, 58, 95, 0.3));
+    border: 2px solid rgba(100, 255, 218, 0.3);
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: 700;
+}
+
+#music-toggle:hover {
+    background: rgba(31, 58, 95, 0.4);
+    border: 2px solid rgba(100, 255, 218, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 180, 255, 0.2);
+}
+
 /* Toast Notification */
 .toast {
     position: fixed;
@@ -406,6 +424,12 @@ canvas {
         padding: 12px 25px;
         font-size: 1em;
     }
+
+    #music-toggle {
+        margin-top: 15px;
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
 }
 
 @media (max-width: 480px) {
@@ -434,6 +458,12 @@ canvas {
     .copy-btn {
         padding: 10px 15px;
         font-size: 0.9em;
+    }
+
+    #music-toggle {
+        margin-top: 10px;
+        padding: 8px 15px;
+        font-size: 0.85em;
     }
 }
 
