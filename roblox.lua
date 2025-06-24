@@ -51,15 +51,12 @@ ModMenuLabel.Font = Enum.Font.GothamBold
 ModMenuLabel.TextSize = 20
 ModMenuLabel.Parent = MainFrame
 
--- Tombol toggle (modern)
-local ToggleButton = Instance.new("TextButton")
+-- Tombol toggle (menggunakan ImageButton)
+local ToggleButton = Instance.new("ImageButton")
 ToggleButton.Size = UDim2.new(0, 60, 0, 60)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 255) -- Warna biru
-ToggleButton.Text = "MOD"
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.TextSize = 16
-ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Image = "rbxassetid://1234567890" -- Ganti dengan Asset ID gambar Anda
 ToggleButton.Parent = ScreenGui
 
 -- Sudut membulat untuk tombol toggle
