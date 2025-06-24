@@ -6,8 +6,8 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- Frame utama
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 320, 0, 420)
-MainFrame.Position = UDim2.new(0.5, -160, 0.5, -210)
+MainFrame.Size = UDim2.new(0, 320, 0, 520) -- Increased height to fit all buttons
+MainFrame.Position = UDim2.new(0.5, -160, 0.5, -260)
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 MainFrame.BorderSizePixel = 0
 MainFrame.Visible = false
@@ -28,7 +28,7 @@ UIStroke.Parent = MainFrame
 -- Animasi buka/tutup MainFrame
 local TweenService = game:GetService("TweenService")
 local function animateFrame(visible)
-    local goal = visible and {Size = UDim2.new(0, 320, 0, 420)} or {Size = UDim2.new(0, 320, 0, 0)}
+    local goal = visible and {Size = UDim2.new(0, 320, 0, 520)} or {Size = UDim2.new(0, 320, 0, 0)}
     local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = TweenService:Create(MainFrame, tweenInfo, goal)
     tween:Play()
@@ -51,12 +51,15 @@ ModMenuLabel.Font = Enum.Font.GothamBold
 ModMenuLabel.TextSize = 20
 ModMenuLabel.Parent = MainFrame
 
--- Tombol toggle (menggunakan ImageButton)
-local ToggleButton = Instance.new("ImageButton")
+-- Tombol toggle (modern)
+local ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0, 60, 0, 60)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 255) -- Warna biru
-ToggleButton.Image = "rbxassetid://1234567890" -- Ganti dengan Asset ID gambar Anda
+ToggleButton.Text = "MOD"
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.TextSize = 16
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.Parent = ScreenGui
 
 -- Sudut membulat untuk tombol toggle
@@ -201,6 +204,125 @@ local function CreateInputBox(name, position, callback)
     end)
 end
 
+-- Variables for Fly and Teleport
+local flyEnabled = false
+local flyConnection
+local bg, bv
+local teleportEnabled = false
+
+-- Fly function
+local function toggleFly()
+    flyEnabled = not flyEnabled
+    if flyEnabled then
+        local plr = game.Players.LocalPlayer
+        local character = plr.Character or plr.CharacterAdded:Wait()
+        local humanoid = character:WaitForChild("Humanoid")
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+
+        humanoid.PlatformStand = true
+
+        bg = Instance.new("BodyGyro")
+        bg.P = 9e4
+        bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+        bg.Parent = rootPart
+
+        bv = Instance.new("BodyVelocity")
+        bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+        bv.Parent = rootPart
+
+        local speed = 50
+        local ctrl = {f = 0, b = 0, l = 0, r = 0, u = 0, d = 0}
+
+        local uis = game:GetService("UserInputService")
+
+        uis.InputBegan:Connect(function(input, gameProcessedEvent)
+            if gameProcessedEvent then return end
+            if input.KeyCode == Enum.KeyCode.W then
+                ctrl.f = 1
+            elseif input.KeyCode == Enum.KeyCode.S then
+                ctrl.b = -1
+            elseif input.KeyCode == Enum.KeyCode.A then
+                ctrl.l = -1
+            elseif input.KeyCode == Enum.KeyCode.D then
+                ctrl.r = 1
+            elseif input.KeyCode == Enum.KeyCode.Space then
+                ctrl.u = 1
+            elseif input.KeyCode == Enum.KeyCode.LeftControl then
+                ctrl.d = -1
+            end
+        end)
+
+        uis.InputEnded:Connect(function(input, gameProcessedEvent)
+            if gameProcessedEvent then return end
+            if input.KeyCode == Enum.KeyCode.W then
+                ctrl.f = 0
+            elseif input.KeyCode == Enum.KeyCode.S then
+                ctrl.b = 0
+            elseif input.KeyCode == Enum.KeyCode.A then
+                ctrl.l = 0
+            elseif input.KeyCode == Enum.KeyCode.D then
+                ctrl.r = 0
+            elseif input.KeyCode == Enum.KeyCode.Space then
+                ctrl.u = 0
+            elseif input.KeyCode == Enum.KeyCode.LeftControl then
+                ctrl.d = 0
+            end
+        end)
+
+        flyConnection = game:GetService("RunService").Stepped:Connect(function()
+            if flyEnabled and character and humanoid and rootPart then
+                local camera = workspace.CurrentCamera
+                if camera then
+                    local moveDirection = Vector3.new(ctrl.l + ctrl.r, ctrl.u + ctrl.d, ctrl.f + ctrl.b)
+                    local moveVelocity = camera.CFrame:VectorToWorldSpace(moveDirection) * speed
+                    bv.Velocity = moveVelocity
+                    bg.CFrame = camera.CFrame
+                end
+            end
+        end)
+    else
+        if flyConnection then
+            flyConnection:Disconnect()
+        end
+        if bg then
+            bg:Destroy()
+        end
+        if bv then
+            bv:Destroy()
+        end
+        local plr = game.Players.LocalPlayer
+        local character = plr.Character
+        if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.PlatformStand = false
+            end
+        end
+    end
+end
+
+-- Teleport function
+local function teleportToMouse()
+    local plr = game.Players.LocalPlayer
+    local character = plr.Character
+    if character then
+        local rootPart = character:FindFirstChild("HumanoidRootPart")
+        if rootPart then
+            local mouse = plr:GetMouse()
+            local ray = workspace.CurrentCamera:ScreenPointToRay(mouse.X, mouse.Y)
+            local raycastParams = RaycastParams.new()
+            raycastParams.FilterDescendantsInstances = {character}
+            raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+            local result = workspace:Raycast(ray.Origin, ray.Direction * 1000, raycastParams)
+            if result then
+                rootPart.CFrame = CFrame.new(result.Position)
+            else
+                rootPart.CFrame = CFrame.new(ray.Origin + ray.Direction * 1000)
+            end
+        end
+    end
+end
+
 -- Input untuk JumpPower dan Speed
 CreateInputBox("JumpPower", UDim2.new(0, 30, 0, 60), function(value)
     if game.Players.LocalPlayer.Character then
@@ -253,3 +375,7 @@ CreateFeatureButton("InfJump (Toggle)", UDim2.new(0, 30, 0, 330), function()
         end
     end
 end)
+
+-- Fly and Teleport buttons
+CreateFeatureButton("Fly (Toggle)", UDim2.new(0, 30, 0, 400), toggleFly)
+CreateFeatureButton("Teleport to Mouse", UDim2.new(0, 30, 0, 470), teleportToMouse)
