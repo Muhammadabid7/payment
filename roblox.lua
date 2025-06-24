@@ -6,30 +6,55 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- Frame utama
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 320, 0, 520) -- Increased height to fit all buttons
-MainFrame.Position = UDim2.new(0.5, -160, 0.5, -260)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+MainFrame.Size = UDim2.new(0, 340, 0, 460)
+MainFrame.Position = UDim2.new(0.5, -170, 0.5, -230)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 MainFrame.BorderSizePixel = 0
 MainFrame.Visible = false
 MainFrame.Parent = ScreenGui
+MainFrame.ClipsDescendants = true
+
+-- Gradien latar belakang
+local UIGradient = Instance.new("UIGradient")
+UIGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 25))
+}
+UIGradient.Rotation = 45
+UIGradient.Parent = MainFrame
 
 -- Sudut membulat
 local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.CornerRadius = UDim.new(0, 16)
 UICorner.Parent = MainFrame
 
--- Outline (bayangan) dengan warna biru statis
+-- Bayangan lembut
 local UIStroke = Instance.new("UIStroke")
 UIStroke.Thickness = 2
-UIStroke.Color = Color3.fromRGB(60, 60, 255) -- Warna biru statis
+UIStroke.Color = Color3.fromRGB(50, 50, 255)
+UIStroke.Transparency = 0.3
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Parent = MainFrame
+
+-- Efek glow
+local GlowEffect = Instance.new("UIStroke")
+GlowEffect.Thickness = 4
+GlowEffect.Color = Color3.fromRGB(100, 100, 255)
+GlowEffect.Transparency = 0.7
+GlowEffect.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+GlowEffect.Parent = MainFrame
 
 -- Animasi buka/tutup MainFrame
 local TweenService = game:GetService("TweenService")
 local function animateFrame(visible)
-    local goal = visible and {Size = UDim2.new(0, 320, 0, 520)} or {Size = UDim2.new(0, 320, 0, 0)}
-    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local goal = visible and {
+        Size = UDim2.new(0, 340, 0, 460),
+        BackgroundTransparency = 0
+    } or {
+        Size = UDim2.new(0, 340, 0, 0),
+        BackgroundTransparency = 1
+    }
+    local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
     local tween = TweenService:Create(MainFrame, tweenInfo, goal)
     tween:Play()
     MainFrame.Visible = true
@@ -42,38 +67,66 @@ end
 
 -- Nama Mod Menu
 local ModMenuLabel = Instance.new("TextLabel")
-ModMenuLabel.Size = UDim2.new(1, 0, 0, 40)
+ModMenuLabel.Size = UDim2.new(1, 0, 0, 50)
 ModMenuLabel.Position = UDim2.new(0, 0, 0, 10)
 ModMenuLabel.Text = "Bidzz Mod Menu"
-ModMenuLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+ModMenuLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
 ModMenuLabel.BackgroundTransparency = 1
-ModMenuLabel.Font = Enum.Font.GothamBold
-ModMenuLabel.TextSize = 20
+ModMenuLabel.Font = Enum.Font.GothamBlack
+ModMenuLabel.TextSize = 24
+ModMenuLabel.TextStrokeTransparency = 0.8
 ModMenuLabel.Parent = MainFrame
 
 -- Tombol toggle (modern)
 local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0, 60, 0, 60)
-ToggleButton.Position = UDim2.new(0, 10, 0, 10)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 255) -- Warna biru
+ToggleButton.Size = UDim2.new(0, 70, 0, 70)
+ToggleButton.Position = UDim2.new(0, 20, 0, 20)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 255)
 ToggleButton.Text = "MOD"
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.TextSize = 16
+ToggleButton.Font = Enum.Font.GothamBlack
+ToggleButton.TextSize = 18
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.Parent = ScreenGui
 
 -- Sudut membulat untuk tombol toggle
 local ToggleUICorner = Instance.new("UICorner")
-ToggleUICorner.CornerRadius = UDim.new(0, 16)
+ToggleUICorner.CornerRadius = UDim.new(1, 0) -- Bentuk lingkaran
 ToggleUICorner.Parent = ToggleButton
 
--- Efek hover untuk tombol toggle
-ToggleButton.MouseEnter:Connect(function()
-    TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 100, 255)}):Play()
-end)
-ToggleButton.MouseLeave:Connect(function()
-    TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 255)}):Play()
-end)
+-- Efek gradien pada tombol toggle
+local ToggleGradient = Instance.new("UIGradient")
+ToggleGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 60, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 100, 255))
+}
+ToggleGradient.Parent = ToggleButton
+
+-- Efek hover dan klik untuk tombol toggle
+local function applyButtonEffects(button)
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Sine), {
+            BackgroundColor3 = Color3.fromRGB(80, 80, 255),
+            Size = UDim2.new(0, 75, 0, 75)
+        }):Play()
+    end)
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Sine), {
+            BackgroundColor3 = Color3.fromRGB(50, 50, 255),
+            Size = UDim2.new(0, 70, 0, 70)
+        }):Play()
+    end)
+    button.MouseButton1Down:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Sine), {
+            Size = UDim2.new(0, 65, 0, 65)
+        }):Play()
+    end)
+    button.MouseButton1Up:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Sine), {
+            Size = UDim2.new(0, 70, 0, 70)
+        }):Play()
+    end)
+end
+applyButtonEffects(ToggleButton)
 
 -- Fungsi drag untuk tombol toggle
 local UIS = game:GetService("UserInputService")
@@ -112,26 +165,40 @@ end)
 -- Fungsi membuat tombol fitur
 local function CreateFeatureButton(name, position, callback)
     local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(0, 260, 0, 50)
+    Button.Size = UDim2.new(0, 280, 0, 50)
     Button.Position = position
-    Button.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+    Button.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
     Button.Text = name
-    Button.Font = Enum.Font.Gotham
+    Button.Font = Enum.Font.GothamSemibold
     Button.TextSize = 16
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextColor3 = Color3.fromRGB(200, 200, 255)
     Button.Parent = MainFrame
 
     -- Sudut membulat
     local ButtonUICorner = Instance.new("UICorner")
-    ButtonUICorner.CornerRadius = UDim.new(0, 8)
+    ButtonUICorner.CornerRadius = UDim.new(0, 10)
     ButtonUICorner.Parent = Button
 
-    -- Efek hover
+    -- Gradien tombol
+    local ButtonGradient = Instance.new("UIGradient")
+    ButtonGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 45, 50)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 40))
+    }
+    ButtonGradient.Parent = Button
+
+    -- Efek hover dan klik
     Button.MouseEnter:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(70, 70, 75)}):Play()
+        TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Sine), {
+            BackgroundColor3 = Color3.fromRGB(60, 60, 65),
+            TextColor3 = Color3.fromRGB(255, 255, 255)
+        }):Play()
     end)
     Button.MouseLeave:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 55)}):Play()
+        TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Sine), {
+            BackgroundColor3 = Color3.fromRGB(40, 40, 45),
+            TextColor3 = Color3.fromRGB(200, 200, 255)
+        }):Play()
     end)
 
     Button.MouseButton1Click:Connect(callback)
@@ -140,59 +207,54 @@ end
 -- Fungsi membuat input box
 local function CreateInputBox(name, position, callback)
     local Container = Instance.new("Frame")
-    Container.Size = UDim2.new(0, 260, 0, 80)
+    Container.Size = UDim2.new(0, 280, 0, 80)
     Container.Position = position
     Container.BackgroundTransparency = 1
     Container.Parent = MainFrame
 
     local Label = Instance.new("TextLabel")
     Label.Size = UDim2.new(1, 0, 0, 20)
-    Label.Position = UDim2.new(0, 0, 0, 0)
+    Label.Position = UDim2.new(0, 10, 0, 0)
     Label.Text = name
-    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextColor3 = Color3.fromRGB(200, 200, 255)
     Label.BackgroundTransparency = 1
     Label.TextXAlignment = Enum.TextXAlignment.Left
-    Label.Font = Enum.Font.Gotham
+    Label.Font = Enum.Font.GothamSemibold
     Label.TextSize = 14
     Label.Parent = Container
 
     local InputBox = Instance.new("TextBox")
-    InputBox.Size = UDim2.new(1, 0, 0, 30)
-    InputBox.Position = UDim2.new(0, 0, 0, 25)
+    InputBox.Size = UDim2.new(1, -20, 0, 30)
+    InputBox.Position = UDim2.new(0, 10, 0, 25)
     InputBox.PlaceholderText = "Enter number..."
     InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    InputBox.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    InputBox.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
     InputBox.TextSize = 14
     InputBox.Font = Enum.Font.Gotham
     InputBox.Parent = Container
 
     -- Sudut membulat untuk input
     local InputUICorner = Instance.new("UICorner")
-    InputUICorner.CornerRadius = UDim.new(0, 6)
+    InputUICorner.CornerRadius = UDim.new(0, 8)
     InputUICorner.Parent = InputBox
 
     local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(1, 0, 0, 30)
-    Button.Position = UDim2.new(0, 0, 0, 60)
-    Button.BackgroundColor3 = Color3.fromRGB(60, 60, 255) -- Warna biru
+    Button.Size = UDim2.new(1, -20, 0, 30)
+    Button.Position = UDim2.new(0, 10, 0, 60)
+    Button.BackgroundColor3 = Color3.fromRGB(50, 50, 255)
     Button.Text = "Set " .. name
-    Button.Font = Enum.Font.Gotham
+    Button.Font = Enum.Font.GothamSemibold
     Button.TextSize = 14
     Button.TextColor3 = Color3.fromRGB(255, 255, 255)
     Button.Parent = Container
 
     -- Sudut membulat untuk tombol
     local ButtonUICorner = Instance.new("UICorner")
-    ButtonUICorner.CornerRadius = UDim.new(0, 6)
+    ButtonUICorner.CornerRadius = UDim.new(0, 8)
     ButtonUICorner.Parent = Button
 
     -- Efek hover untuk tombol
-    Button.MouseEnter:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 100, 255)}):Play()
-    end)
-    Button.MouseLeave:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 60, 255)}):Play()
-    end)
+    applyButtonEffects(Button)
 
     Button.MouseButton1Click:Connect(function()
         local input = tonumber(InputBox.Text)
@@ -204,133 +266,14 @@ local function CreateInputBox(name, position, callback)
     end)
 end
 
--- Variables for Fly and Teleport
-local flyEnabled = false
-local flyConnection
-local bg, bv
-local teleportEnabled = false
-
--- Fly function
-local function toggleFly()
-    flyEnabled = not flyEnabled
-    if flyEnabled then
-        local plr = game.Players.LocalPlayer
-        local character = plr.Character or plr.CharacterAdded:Wait()
-        local humanoid = character:WaitForChild("Humanoid")
-        local rootPart = character:WaitForChild("HumanoidRootPart")
-
-        humanoid.PlatformStand = true
-
-        bg = Instance.new("BodyGyro")
-        bg.P = 9e4
-        bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-        bg.Parent = rootPart
-
-        bv = Instance.new("BodyVelocity")
-        bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
-        bv.Parent = rootPart
-
-        local speed = 50
-        local ctrl = {f = 0, b = 0, l = 0, r = 0, u = 0, d = 0}
-
-        local uis = game:GetService("UserInputService")
-
-        uis.InputBegan:Connect(function(input, gameProcessedEvent)
-            if gameProcessedEvent then return end
-            if input.KeyCode == Enum.KeyCode.W then
-                ctrl.f = 1
-            elseif input.KeyCode == Enum.KeyCode.S then
-                ctrl.b = -1
-            elseif input.KeyCode == Enum.KeyCode.A then
-                ctrl.l = -1
-            elseif input.KeyCode == Enum.KeyCode.D then
-                ctrl.r = 1
-            elseif input.KeyCode == Enum.KeyCode.Space then
-                ctrl.u = 1
-            elseif input.KeyCode == Enum.KeyCode.LeftControl then
-                ctrl.d = -1
-            end
-        end)
-
-        uis.InputEnded:Connect(function(input, gameProcessedEvent)
-            if gameProcessedEvent then return end
-            if input.KeyCode == Enum.KeyCode.W then
-                ctrl.f = 0
-            elseif input.KeyCode == Enum.KeyCode.S then
-                ctrl.b = 0
-            elseif input.KeyCode == Enum.KeyCode.A then
-                ctrl.l = 0
-            elseif input.KeyCode == Enum.KeyCode.D then
-                ctrl.r = 0
-            elseif input.KeyCode == Enum.KeyCode.Space then
-                ctrl.u = 0
-            elseif input.KeyCode == Enum.KeyCode.LeftControl then
-                ctrl.d = 0
-            end
-        end)
-
-        flyConnection = game:GetService("RunService").Stepped:Connect(function()
-            if flyEnabled and character and humanoid and rootPart then
-                local camera = workspace.CurrentCamera
-                if camera then
-                    local moveDirection = Vector3.new(ctrl.l + ctrl.r, ctrl.u + ctrl.d, ctrl.f + ctrl.b)
-                    local moveVelocity = camera.CFrame:VectorToWorldSpace(moveDirection) * speed
-                    bv.Velocity = moveVelocity
-                    bg.CFrame = camera.CFrame
-                end
-            end
-        end)
-    else
-        if flyConnection then
-            flyConnection:Disconnect()
-        end
-        if bg then
-            bg:Destroy()
-        end
-        if bv then
-            bv:Destroy()
-        end
-        local plr = game.Players.LocalPlayer
-        local character = plr.Character
-        if character then
-            local humanoid = character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid.PlatformStand = false
-            end
-        end
-    end
-end
-
--- Teleport function
-local function teleportToMouse()
-    local plr = game.Players.LocalPlayer
-    local character = plr.Character
-    if character then
-        local rootPart = character:FindFirstChild("HumanoidRootPart")
-        if rootPart then
-            local mouse = plr:GetMouse()
-            local ray = workspace.CurrentCamera:ScreenPointToRay(mouse.X, mouse.Y)
-            local raycastParams = RaycastParams.new()
-            raycastParams.FilterDescendantsInstances = {character}
-            raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-            local result = workspace:Raycast(ray.Origin, ray.Direction * 1000, raycastParams)
-            if result then
-                rootPart.CFrame = CFrame.new(result.Position)
-            else
-                rootPart.CFrame = CFrame.new(ray.Origin + ray.Direction * 1000)
-            end
-        end
-    end
-end
-
 -- Input untuk JumpPower dan Speed
-CreateInputBox("JumpPower", UDim2.new(0, 30, 0, 60), function(value)
+CreateInputBox("JumpPower", UDim2.new(0, 30, 0, 70), function(value)
     if game.Players.LocalPlayer.Character then
         game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
     end
 end)
 
-CreateInputBox("Speed", UDim2.new(0, 30, 0, 160), function(value)
+CreateInputBox("Speed", UDim2.new(0, 30, 0, 170), function(value)
     if game.Players.LocalPlayer.Character then
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
     end
@@ -339,7 +282,7 @@ end)
 -- Noclip
 local NoclipEnabled = false
 local NoclipConnection
-CreateFeatureButton("Noclip (Toggle)", UDim2.new(0, 30, 0, 260), function()
+CreateFeatureButton("Noclip (Toggle)", UDim2.new(0, 30, 0, 270), function()
     NoclipEnabled = not NoclipEnabled
     if NoclipEnabled then
         NoclipConnection = game:GetService("RunService").Stepped:Connect(function()
@@ -361,7 +304,7 @@ end)
 -- Infinite Jump
 local InfJumpEnabled = false
 local InfJumpConnection
-CreateFeatureButton("InfJump (Toggle)", UDim2.new(0, 30, 0, 330), function()
+CreateFeatureButton("InfJump (Toggle)", UDim2.new(0, 30, 0, 340), function()
     InfJumpEnabled = not InfJumpEnabled
     if InfJumpEnabled then
         InfJumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
@@ -375,7 +318,3 @@ CreateFeatureButton("InfJump (Toggle)", UDim2.new(0, 30, 0, 330), function()
         end
     end
 end)
-
--- Fly and Teleport buttons
-CreateFeatureButton("Fly (Toggle)", UDim2.new(0, 30, 0, 400), toggleFly)
-CreateFeatureButton("Teleport to Mouse", UDim2.new(0, 30, 0, 470), teleportToMouse)
