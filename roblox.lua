@@ -17,70 +17,70 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 local function createLoadingScreen()
     local LoadingFrame = Instance.new("Frame")
     LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
-    LoadingFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
-    LoadingFrame.BackgroundTransparency = 0.2
+    LoadingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    LoadingFrame.BackgroundTransparency = 0.3
     LoadingFrame.Parent = ScreenGui
     LoadingFrame.ZIndex = 100
 
     local UIGradient = Instance.new("UIGradient")
     UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 10, 20)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 0, 100))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 0, 160))
     })
-    UIGradient.Rotation = 45
+    UIGradient.Rotation = 90
     UIGradient.Parent = LoadingFrame
 
     local LoadingText = Instance.new("TextLabel")
-    LoadingText.Size = UDim2.new(0, 400, 0, 100)
-    LoadingText.Position = UDim2.new(0.5, -200, 0.4, -50)
+    LoadingText.Size = UDim2.new(0, 500, 0, 80)
+    LoadingText.Position = UDim2.new(0.5, -250, 0.5, -40)
     LoadingText.BackgroundTransparency = 1
-    LoadingText.Text = "Initializing Bidzz Mod..."
+    LoadingText.Text = "Bidzz Mod Loading..."
     LoadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
-    LoadingText.Font = Enum.Font.SciFi
-    LoadingText.TextSize = 36
-    LoadingText.TextStrokeTransparency = 0.8
-    LoadingText.TextStrokeColor3 = Color3.fromRGB(255, 0, 255)
+    LoadingText.Font = Enum.Font.Code
+    LoadingText.TextSize = 40
+    LoadingText.TextStrokeTransparency = 0.7
+    LoadingText.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
     LoadingText.Parent = LoadingFrame
 
-    local function floatText()
-        TweenService:Create(LoadingText, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-            Position = UDim2.new(0.5, -200, 0.4, -30)
+    local function pulseText()
+        TweenService:Create(LoadingText, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+            TextTransparency = 0.2
         }):Play()
     end
-    floatText()
+    pulseText()
 
-    for i = 1, 8 do
+    for i = 1, 6 do
         local Particle = Instance.new("Frame")
-        Particle.Size = UDim2.new(0, 10, 0, 10)
+        Particle.Size = UDim2.new(0, 15, 0, 15)
         Particle.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-        Particle.BackgroundTransparency = 0.5
+        Particle.BackgroundTransparency = 0.4
         Particle.Parent = LoadingFrame
         local UICorner = Instance.new("UICorner")
-        UICorner.CornerRadius = UDim.new(1, 0)
+        UICorner.CornerRadius = UDim.new(0.5, 0)
         UICorner.Parent = Particle
 
-        local angle = i * (360 / 8)
+        local angle = i * (360 / 6)
         RunService.RenderStepped:Connect(function(delta)
-            angle = angle + delta * 100
-            Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 100, 0.5, math.sin(math.rad(angle)) * 100)
+            angle = angle + delta * 120
+            Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 120, 0.5, math.sin(math.rad(angle)) * 120)
         end)
     end
 
-    task.delay(3, function()
-        TweenService:Create(LoadingFrame, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    task.delay(2.5, function()
+        TweenService:Create(LoadingFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             BackgroundTransparency = 1
         }):Play()
-        TweenService:Create(LoadingText, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TweenService:Create(LoadingText, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
             TextTransparency = 1
         }):Play()
         for _, particle in pairs(LoadingFrame:GetChildren()) do
             if particle:IsA("Frame") then
-                TweenService:Create(particle, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                TweenService:Create(particle, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                     BackgroundTransparency = 1
                 }):Play()
             end
         end
-        task.delay(1, function()
+        task.delay(0.8, function()
             LoadingFrame:Destroy()
         end)
     end)
@@ -97,9 +97,9 @@ end
 
 local function addGlow(instance)
     local UIStroke = Instance.new("UIStroke")
-    UIStroke.Thickness = 2
+    UIStroke.Thickness = 1.5
     UIStroke.Color = Color3.fromRGB(0, 255, 255)
-    UIStroke.Transparency = 0.5
+    UIStroke.Transparency = 0.3
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = instance
 end
@@ -107,66 +107,23 @@ end
 local function addGradient(instance)
     local UIGradient = Instance.new("UIGradient")
     UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(70, 130, 180)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 0, 255))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(128, 0, 255))
     })
-    UIGradient.Rotation = 45
+    UIGradient.Rotation = 90
     UIGradient.Parent = instance
 end
 
--- Toggle Button
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Parent = ScreenGui
-ToggleButton.Size = UDim2.new(0, 60, 0, 60)
-ToggleButton.Position = UDim2.new(0, 10, 0, 10)
-ToggleButton.Text = "☰"
-ToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
-ToggleButton.Font = Enum.Font.SciFi
-ToggleButton.TextSize = 24
-addUICorner(ToggleButton, 15)
-addGlow(ToggleButton)
-addGradient(ToggleButton)
-
-ToggleButton.MouseEnter:Connect(function()
-    TweenService:Create(ToggleButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-        Size = UDim2.new(0, 65, 0, 65),
-        BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-    }):Play()
-end)
-ToggleButton.MouseLeave:Connect(function()
-    TweenService:Create(ToggleButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-        Size = UDim2.new(0, 60, 0, 60),
-        BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-    }):Play()
-end)
-
--- Main Frame
-local MainFrame = Instance.new("ScrollingFrame")
+-- Main Frame (Sidebar)
+local MainFrame = Instance.new("Frame")
 MainFrame.Parent = ScreenGui
-MainFrame.Size = UDim2.new(0, 350, 0, 450)
-MainFrame.Position = UDim2.new(0, 80, 0, 10)
-MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+MainFrame.Size = UDim2.new(0, 250, 0, 600)
+MainFrame.Position = UDim2.new(0, -250, 0.5, -300)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.BackgroundTransparency = 0.1
-MainFrame.ScrollBarThickness = 6
 MainFrame.Visible = true
-MainFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-addUICorner(MainFrame, 20)
+addUICorner(MainFrame, 10)
 addGlow(MainFrame)
-
-local BackgroundGradient = Instance.new("UIGradient")
-BackgroundGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 40)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 0, 120))
-})
-BackgroundGradient.Rotation = 45
-BackgroundGradient.Parent = MainFrame
-
--- UI List Layout
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Parent = MainFrame
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 12)
 
 -- Title
 local Title = Instance.new("TextLabel")
@@ -174,80 +131,71 @@ Title.Parent = MainFrame
 Title.Size = UDim2.new(1, 0, 0, 50)
 Title.BackgroundTransparency = 1
 Title.TextColor3 = Color3.fromRGB(0, 255, 255)
-Title.Font = Enum.Font.SciFi
-Title.TextSize = 28
+Title.Font = Enum.Font.Code
+Title.TextSize = 24
 Title.Text = "Bidzz Mod - Bidzz Official"
-Title.TextStrokeTransparency = 0.8
-Title.TextStrokeColor3 = Color3.fromRGB(255, 0, 255)
-addUICorner(Title, 10)
+Title.TextStrokeTransparency = 0.7
+Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
+Title.Position = UDim2.new(0, 0, 0, 10)
+addUICorner(Title, 8)
 
-local function floatTitle()
-    TweenService:Create(Title, TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-        Position = UDim2.new(0, 0, 0, 10)
+-- Toggle Button
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = ScreenGui
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
+ToggleButton.Text = "▶"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
+ToggleButton.Font = Enum.Font.Code
+ToggleButton.TextSize = 20
+addUICorner(ToggleButton, 10)
+addGlow(ToggleButton)
+addGradient(ToggleButton)
+
+ToggleButton.MouseEnter:Connect(function()
+    TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+        Size = UDim2.new(0, 55, 0, 55),
+        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     }):Play()
-end
-floatTitle()
+end)
+ToggleButton.MouseLeave:Connect(function()
+    TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+        Size = UDim2.new(0, 50, 0, 50),
+        BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    }):Play()
+end)
 
--- Text Boxes
-local SpeedBox = Instance.new("TextBox")
-SpeedBox.Parent = MainFrame
-SpeedBox.Size = UDim2.new(1, -20, 0, 35)
-SpeedBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-SpeedBox.TextColor3 = Color3.fromRGB(0, 255, 255)
-SpeedBox.Font = Enum.Font.SciFi
-SpeedBox.TextSize = 16
-SpeedBox.PlaceholderText = "Enter WalkSpeed"
-SpeedBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 150)
-addUICorner(SpeedBox, 12)
-addGlow(SpeedBox)
-
-local JumpBox = Instance.new("TextBox")
-JumpBox.Parent = MainFrame
-JumpBox.Size = UDim2.new(1, -20, 0, 35)
-JumpBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-JumpBox.TextColor3 = Color3.fromRGB(0, 255, 255)
-JumpBox.Font = Enum.Font.SciFi
-JumpBox.TextSize = 16
-JumpBox.PlaceholderText = "Enter JumpPower"
-JumpBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 150)
-addUICorner(JumpBox, 12)
-addGlow(JumpBox)
-
-local GravityBox = Instance.new("TextBox")
-GravityBox.Parent = MainFrame
-GravityBox.Size = UDim2.new(1, -20, 0, 35)
-GravityBox.BackgroundColor3 = Color3.fromRGB(30, 30, 60)
-GravityBox.TextColor3 = Color3.fromRGB(0, 255, 255)
-GravityBox.Font = Enum.Font.SciFi
-GravityBox.TextSize = 16
-GravityBox.PlaceholderText = "Set Gravity Value"
-GravityBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 150)
-addUICorner(GravityBox, 12)
-addGlow(GravityBox)
+-- UI List Layout
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = MainFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 8)
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
 -- Button Creation
 local function createButton(parent, text, color, callback)
     local Button = Instance.new("TextButton")
     Button.Parent = parent
-    Button.Size = UDim2.new(1, -20, 0, 45)
+    Button.Size = UDim2.new(0, 220, 0, 40)
     Button.BackgroundColor3 = color
     Button.TextColor3 = Color3.fromRGB(0, 255, 255)
-    Button.Font = Enum.Font.SciFi
+    Button.Font = Enum.Font.Code
     Button.TextSize = 16
     Button.Text = text
-    addUICorner(Button, 12)
+    addUICorner(Button, 8)
     addGlow(Button)
     addGradient(Button)
 
     Button.MouseEnter:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(1, -10, 0, 50),
+        TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 230, 0, 45),
             BackgroundColor3 = Color3.fromRGB(color.R * 255 + 20, color.G * 255 + 20, color.B * 255 + 20)
         }):Play()
     end)
     Button.MouseLeave:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(1, -20, 0, 45),
+        TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(0, 220, 0, 40),
             BackgroundColor3 = color
         }):Play()
     end)
@@ -255,6 +203,55 @@ local function createButton(parent, text, color, callback)
     Button.MouseButton1Click:Connect(callback)
     return Button
 end
+
+-- Text Boxes
+local InputFrame = Instance.new("Frame")
+InputFrame.Parent = MainFrame
+InputFrame.Size = UDim2.new(0, 220, 0, 120)
+InputFrame.BackgroundTransparency = 1
+InputFrame.LayoutOrder = 1
+
+local InputLayout = Instance.new("UIListLayout")
+InputLayout.Parent = InputFrame
+InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
+InputLayout.Padding = UDim.new(0, 8)
+InputLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local SpeedBox = Instance.new("TextBox")
+SpeedBox.Parent = InputFrame
+SpeedBox.Size = UDim2.new(0, 200, 0, 30)
+SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SpeedBox.TextColor3 = Color3.fromRGB(0, 255, 255)
+SpeedBox.Font = Enum.Font.Code
+SpeedBox.TextSize = 14
+SpeedBox.PlaceholderText = "WalkSpeed"
+SpeedBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+addUICorner(SpeedBox, 6)
+addGlow(SpeedBox)
+
+local JumpBox = Instance.new("TextBox")
+JumpBox.Parent = InputFrame
+JumpBox.Size = UDim2.new(0, 200, 0, 30)
+JumpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+JumpBox.TextColor3 = Color3.fromRGB(0, 255, 255)
+JumpBox.Font = Enum.Font.Code
+JumpBox.TextSize = 14
+JumpBox.PlaceholderText = "JumpPower"
+JumpBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+addUICorner(JumpBox, 6)
+addGlow(JumpBox)
+
+local GravityBox = Instance.new("TextBox")
+GravityBox.Parent = InputFrame
+GravityBox.Size = UDim2.new(0, 200, 0, 30)
+GravityBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+GravityBox.TextColor3 = Color3.fromRGB(0, 255, 255)
+GravityBox.Font = Enum.Font.Code
+GravityBox.TextSize = 14
+GravityBox.PlaceholderText = "Gravity"
+GravityBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+addUICorner(GravityBox, 6)
+addGlow(GravityBox)
 
 -- Speed and Jump Handlers
 SpeedBox.FocusLost:Connect(function(enterPressed)
@@ -279,7 +276,7 @@ end)
 local gravityEnabled = true
 local gravityValue = workspace.Gravity
 
-createButton(MainFrame, "Toggle Gravity", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Toggle Gravity", Color3.fromRGB(40, 40, 40), function()
     gravityEnabled = not gravityEnabled
     if gravityEnabled then
         workspace.Gravity = gravityValue
@@ -330,7 +327,7 @@ local function removeHighlight(player)
     end
 end
 
-createButton(MainFrame, "ESP", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "ESP", Color3.fromRGB(40, 40, 40), function()
     espEnabled = not espEnabled
     if espEnabled then
         for _, player in pairs(Players:GetPlayers()) do
@@ -356,7 +353,7 @@ end)
 -- Infinite Jump
 local infiniteJump = false
 local jumpConnection
-createButton(MainFrame, "> InfJump", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Infinite Jump", Color3.fromRGB(40, 40, 40), function()
     infiniteJump = not infiniteJump
     if infiniteJump and not jumpConnection then
         jumpConnection = UserInputService.JumpRequest:Connect(function()
@@ -373,7 +370,7 @@ end)
 -- Noclip
 local noclip = false
 local noclipConnection
-createButton(MainFrame, "> Noclip/Clip", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Noclip", Color3.fromRGB(40, 40, 40), function()
     noclip = not noclip
     if noclip then
         noclipConnection = RunService.Stepped:Connect(function()
@@ -393,7 +390,7 @@ end)
 
 -- God Mode
 local godMode = false
-createButton(MainFrame, "> God Mode", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "God Mode", Color3.fromRGB(40, 40, 40), function()
     godMode = not godMode
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         local humanoid = LocalPlayer.Character.Humanoid
@@ -409,7 +406,7 @@ end)
 
 -- Hitbox
 local hitboxEnabled = false
-createButton(MainFrame, "> Hitbox x6", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Hitbox x6", Color3.fromRGB(40, 40, 40), function()
     hitboxEnabled = not hitboxEnabled
     if LocalPlayer.Character then
         for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
@@ -429,13 +426,12 @@ end)
 -- AimBot
 local aimEnabled = false
 local aimIndicator = Instance.new("Frame")
-aimIndicator.Size = UDim2.new(0, 8, 0, 8)
-aimIndicator.Position = UDim2.new(0.5, -4, 0.5, -4)
-aimIndicator.BackgroundColor3 = Color3.fromRGB(255, 0, 255)
+aimIndicator.Size = UDim2.new(0, 10, 0, 10)
+aimIndicator.Position = UDim2.new(0.5, -5, 0.5, -5)
+aimIndicator.BackgroundColor3 = Color3.fromRGB(128, 0, 255)
 aimIndicator.Visible = false
-addUICorner(aimIndicator, 8)
+addUICorner(aimIndicator, 5)
 addGlow(aimIndicator)
-addGradient(aimIndicator)
 aimIndicator.Parent = ScreenGui
 
 local function getClosestPlayer()
@@ -454,7 +450,7 @@ local function getClosestPlayer()
 end
 
 local aimConnection
-createButton(MainFrame, "> AimBot", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "AimBot", Color3.fromRGB(40, 40, 40), function()
     aimEnabled = not aimEnabled
     aimIndicator.Visible = aimEnabled
     if aimEnabled then
@@ -495,14 +491,14 @@ local function toggleFling()
     end
 end
 
-createButton(MainFrame, "> Spin", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Spin", Color3.fromRGB(40, 40, 40), function()
     toggleFling()
 end)
 
 -- Particle Burst
 local particleBurstEnabled = false
 local particleConnection
-createButton(MainFrame, "> Particle Burst", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Particle Burst", Color3.fromRGB(40, 40, 40), function()
     particleBurstEnabled = not particleBurstEnabled
     if particleBurstEnabled then
         particleConnection = RunService.Heartbeat:Connect(function()
@@ -537,22 +533,22 @@ createButton(MainFrame, "> Particle Burst", Color3.fromRGB(50, 50, 100), functio
 end)
 
 -- Fly
-createButton(MainFrame, "> Fly", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Fly", Color3.fromRGB(40, 40, 40), function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"))()
 end)
 
 -- Sus
-createButton(MainFrame, "> Sus", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Sus", Color3.fromRGB(40, 40, 40), function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/nahhhbrrr/refs/heads/main/base.lua"))()
 end)
 
 -- InfiniteYield
-createButton(MainFrame, "> InfiniteYield", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "InfiniteYield", Color3.fromRGB(40, 40, 40), function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
 -- Freecam
-createButton(MainFrame, "> Freecam", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Freecam", Color3.fromRGB(40, 40, 40), function()
     local freecamEnabled = not _G.freecamEnabled
     _G.freecamEnabled = freecamEnabled
     local camera = workspace.CurrentCamera
@@ -591,7 +587,7 @@ end)
 
 -- XRay
 local isInvisible = false
-createButton(MainFrame, "> XRay", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "XRay", Color3.fromRGB(40, 40, 40), function()
     isInvisible = not isInvisible
     for _, object in pairs(game:GetDescendants()) do
         if (object:IsA("BasePart") or object:IsA("Decal") or object:IsA("Texture")) and
@@ -602,20 +598,34 @@ createButton(MainFrame, "> XRay", Color3.fromRGB(50, 50, 100), function()
 end)
 
 -- Rejoin
-createButton(MainFrame, "> Rejoin Game", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Rejoin Game", Color3.fromRGB(40, 40, 40), function()
     TeleportService:Teleport(game.PlaceId, LocalPlayer)
 end)
 
 -- Teleport to Player
+local teleportFrame = Instance.new("Frame")
+teleportFrame.Parent = MainFrame
+teleportFrame.Size = UDim2.new(0, 220, 0, 0)
+teleportFrame.BackgroundTransparency = 1
+teleportFrame.ClipsDescendants = true
+teleportFrame.Visible = false
+
+local teleportLayout = Instance.new("UIListLayout")
+teleportLayout.Parent = teleportFrame
+teleportLayout.SortOrder = Enum.SortOrder.LayoutOrder
+teleportLayout.Padding = UDim.new(0, 8)
+teleportLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
 local teleportVisible = false
 local teleportButtons = {}
 local function updateTeleportButtons()
     for _, button in pairs(teleportButtons) do button:Destroy() end
     teleportButtons = {}
     if teleportVisible then
+        teleportFrame.Visible = true
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= LocalPlayer then
-                local button = createButton(MainFrame, "TP to " .. player.Name, Color3.fromRGB(50, 50, 100), function()
+                local button = createButton(teleportFrame, "TP to " .. player.Name, Color3.fromRGB(40, 40, 40), function()
                     if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                         LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
                     end
@@ -623,10 +633,14 @@ local function updateTeleportButtons()
                 table.insert(teleportButtons, button)
             end
         end
+        teleportFrame.Size = UDim2.new(0, 220, 0, teleportLayout.AbsoluteContentSize.Y)
+    else
+        teleportFrame.Visible = false
+        teleportFrame.Size = UDim2.new(0, 220, 0, 0)
     end
 end
 
-createButton(MainFrame, "> Teleport to Player", Color3.fromRGB(50, 50, 100), function()
+createButton(MainFrame, "Teleport to Player", Color3.fromRGB(40, 40, 40), function()
     teleportVisible = not teleportVisible
     updateTeleportButtons()
 end)
@@ -639,17 +653,23 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 -- GUI Toggle
-local guiVisible = true
+local guiVisible = false
 ToggleButton.MouseButton1Click:Connect(function()
     guiVisible = not guiVisible
     if guiVisible then
         TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Position = UDim2.new(0, 80, 0, 10)
+            Position = UDim2.new(0, 10, 0.5, -300)
+        }):Play()
+        TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+            Text = "◀"
         }):Play()
         MainFrame.Visible = true
     else
         TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-            Position = UDim2.new(0, 80, -1, 0)
+            Position = UDim2.new(0, -250, 0.5, -300)
+        }):Play()
+        TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+            Text = "▶"
         }):Play()
         task.delay(0.5, function()
             MainFrame.Visible = false
@@ -659,5 +679,5 @@ end)
 
 -- Canvas Size Update
 UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    MainFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 30)
+    MainFrame.Size = UDim2.new(0, 250, 0, math.min(UIListLayout.AbsoluteContentSize.Y + 60, 600))
 end)
