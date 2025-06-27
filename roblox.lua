@@ -1,3 +1,4 @@
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -12,6 +13,8 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "BidzzMod"
 ScreenGui.Parent = CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.IgnoreGuiInset = true -- Ensure GUI respects screen boundaries
+ScreenGui.ResetOnSpawn = false -- Prevent GUI from resetting on player respawn
 
 -- Loading Screen
 local function createLoadingScreen()
@@ -62,7 +65,6 @@ local function createLoadingScreen()
         local angle = i * (360 / 6)
         RunService.RenderStepped:Connect(function(delta)
             angle = angle + delta * 120
-            -- Smoother orbit with easing
             Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 120, 0.5, math.sin(math.rad(angle)) * 120)
             TweenService:Create(Particle, TweenInfo.new(0.5, Enum.EasingStyle.Sine), {
                 BackgroundTransparency = 0.4 + 0.3 * math.sin(tick() * 2)
@@ -81,7 +83,7 @@ local function createLoadingScreen()
             if particle:IsA("Frame") then
                 TweenService:Create(particle, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                     BackgroundTransparency = 1,
-                    Size = UDim2.new(0, 0, 0, 0) -- Shrink particles as they fade
+                    Size = UDim2.new(0, 0, 0, 0)
                 }):Play()
             end
         end
@@ -128,8 +130,9 @@ ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.Text = "☰"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
- miljonerButton.Font = Enum.Font.Code
+ToggleButton.Font = Enum.Font.Code
 ToggleButton.TextSize = 20
+ToggleButton.ZIndex = 10 -- Increased ZIndex to ensure clickability
 addUICorner(ToggleButton, 10)
 local toggleGlow = addGlow(ToggleButton)
 addGradient(ToggleButton)
@@ -159,13 +162,14 @@ end)
 local MainFrame = Instance.new("ScrollingFrame")
 MainFrame.Parent = ScreenGui
 MainFrame.Size = UDim2.new(0, 300, 0, 500)
-MainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)
+MainFrame.Position = UDim2.new(0, -300, 0.5, -250) -- Start off-screen
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.ScrollBarThickness = 4
 MainFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 255)
 MainFrame.Visible = false
 MainFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+MainFrame.ZIndex = 5
 addUICorner(MainFrame, 10)
 addGlow(MainFrame)
 
@@ -189,7 +193,7 @@ Title.TextStrokeTransparency = 0.7
 Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
 addUICorner(Title, 8)
 
--- Modified Button Creation with Status Indicator
+-- Button Creation with Status Indicator
 local function createButton(parent, text, color, callback)
     local ButtonFrame = Instance.new("Frame")
     ButtonFrame.Parent = parent
@@ -205,6 +209,7 @@ local function createButton(parent, text, color, callback)
     Button.Font = Enum.Font.Code
     Button.TextSize = 16
     Button.Text = text
+    Button.ZIndex = 6
     addUICorner(Button, 8)
     local buttonGlow = addGlow(Button)
     addGradient(Button)
@@ -218,6 +223,7 @@ local function createButton(parent, text, color, callback)
     StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
     StatusLabel.Font = Enum.Font.Code
     StatusLabel.TextSize = 14
+    StatusLabel.ZIndex = 6
     addUICorner(StatusLabel, 8)
 
     local function updateStatus(state)
@@ -250,6 +256,7 @@ local function createButton(parent, text, color, callback)
     end)
 
     Button.MouseButton1Click:Connect(function()
+        print("Button clicked: " .. text) -- Debug print
         callback(updateStatus)
     end)
 
@@ -269,7 +276,7 @@ InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
 InputLayout.Padding = UDim.new(0, 8)
 InputLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local SpeedBox = Instance.new("TextBox") -- Fixed: Changed "WalkSpeed" to "TextBox"
+local SpeedBox = Instance.new("TextBox")
 SpeedBox.Parent = InputFrame
 SpeedBox.Size = UDim2.new(0, 240, 0, 30)
 SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -278,10 +285,11 @@ SpeedBox.Font = Enum.Font.Code
 SpeedBox.TextSize = 14
 SpeedBox.PlaceholderText = "WalkSpeed"
 SpeedBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+SpeedBox.ZIndex = 6
 addUICorner(SpeedBox, 6)
 addGlow(SpeedBox)
 
-local JumpBox = Instance.new("TextBox") -- Fixed: Changed "JumpPower" to "TextBox"
+local JumpBox = Instance.new("TextBox")
 JumpBox.Parent = InputFrame
 JumpBox.Size = UDim2.new(0, 240, 0, 30)
 JumpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -290,6 +298,7 @@ JumpBox.Font = Enum.Font.Code
 JumpBox.TextSize = 14
 JumpBox.PlaceholderText = "JumpPower"
 JumpBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+JumpBox.ZIndex = 6
 addUICorner(JumpBox, 6)
 addGlow(JumpBox)
 
@@ -302,6 +311,7 @@ GravityBox.Font = Enum.Font.Code
 GravityBox.TextSize = 14
 GravityBox.PlaceholderText = "Gravity"
 GravityBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+GravityBox.ZIndex = 6
 addUICorner(GravityBox, 6)
 addGlow(GravityBox)
 
@@ -486,6 +496,7 @@ aimIndicator.Size = UDim2.new(0, 10, 0, 10)
 aimIndicator.Position = UDim2.new(0.5, -5, 0.5, -5)
 aimIndicator.BackgroundColor3 = Color3.fromRGB(128, 0, 255)
 aimIndicator.Visible = false
+aimIndicator.ZIndex = 10
 addUICorner(aimIndicator, 5)
 addGlow(aimIndicator)
 aimIndicator.Parent = ScreenGui
@@ -671,7 +682,7 @@ end)
 -- Rejoin
 local rejoinButton, rejoinUpdateStatus = createButton(MainFrame, "Rejoin Game", Color3.fromRGB(40, 40, 40), function(updateStatus)
     TeleportService:Teleport(game.PlaceId, LocalPlayer)
-    updateStatus(false) -- Rejoin doesn't maintain state
+    updateStatus(false)
 end)
 
 -- Teleport to Player
@@ -681,6 +692,7 @@ teleportFrame.Size = UDim2.new(0, 260, 0, 0)
 teleportFrame.BackgroundTransparency = 1
 teleportFrame.ClipsDescendants = true
 teleportFrame.Visible = false
+teleportFrame.ZIndex = 5
 
 local teleportLayout = Instance.new("UIListLayout")
 teleportLayout.Parent = teleportFrame
@@ -725,9 +737,10 @@ Players.PlayerRemoving:Connect(function(player)
     if teleportVisible then updateTeleportButtons() end
 end)
 
--- GUI Toggle with Enhanced Animation
+-- GUI Toggle with Debug Print
 local guiVisible = false
 ToggleButton.MouseButton1Click:Connect(function()
+    print("ToggleButton clicked, guiVisible: " .. tostring(guiVisible)) -- Debug print
     guiVisible = not guiVisible
     if guiVisible then
         MainFrame.Visible = true
