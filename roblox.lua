@@ -122,17 +122,17 @@ local function addGradient(instance)
     UIGradient.Parent = instance
 end
 
--- Toggle Button (Top-Left)
+-- Toggle Button (Moved Slightly Down)
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = ScreenGui
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.Position = UDim2.new(0, 10, 0, 50) -- Moved 50 pixels down
 ToggleButton.Text = "☰"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 ToggleButton.Font = Enum.Font.Code
 ToggleButton.TextSize = 20
-ToggleButton.ZIndex = 10 -- Increased ZIndex to ensure clickability
+ToggleButton.ZIndex = 10 -- High ZIndex for clickability
 addUICorner(ToggleButton, 10)
 local toggleGlow = addGlow(ToggleButton)
 addGradient(ToggleButton)
@@ -193,7 +193,7 @@ Title.TextStrokeTransparency = 0.7
 Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
 addUICorner(Title, 8)
 
--- Button Creation with Status Indicator
+-- Button Creation with Enhanced Status Indicator
 local function createButton(parent, text, color, callback)
     local ButtonFrame = Instance.new("Frame")
     ButtonFrame.Parent = parent
@@ -214,23 +214,36 @@ local function createButton(parent, text, color, callback)
     local buttonGlow = addGlow(Button)
     addGradient(Button)
 
+    -- Status Frame
+    local StatusFrame = Instance.new("Frame")
+    StatusFrame.Parent = ButtonFrame
+    StatusFrame.Size = UDim2.new(0, 34, 0, 34)
+    StatusFrame.Position = UDim2.new(1, -36, 0, 3)
+    StatusFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    StatusFrame.BackgroundTransparency = 0.5
+    StatusFrame.ZIndex = 6
+    addUICorner(StatusFrame, 8)
+    addGlow(StatusFrame)
+    addGradient(StatusFrame)
+
     local StatusLabel = Instance.new("TextLabel")
-    StatusLabel.Parent = ButtonFrame
-    StatusLabel.Size = UDim2.new(0, 40, 0, 40)
-    StatusLabel.Position = UDim2.new(1, -40, 0, 0)
+    StatusLabel.Parent = StatusFrame
+    StatusLabel.Size = UDim2.new(0, 30, 0, 30)
+    StatusLabel.Position = UDim2.new(0.5, -15, 0.5, -15)
     StatusLabel.BackgroundTransparency = 1
     StatusLabel.Text = "Off"
     StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
     StatusLabel.Font = Enum.Font.Code
-    StatusLabel.TextSize = 14
-    StatusLabel.ZIndex = 6
-    addUICorner(StatusLabel, 8)
+    StatusLabel.TextSize = 12
+    StatusLabel.ZIndex = 7
 
     local function updateStatus(state)
         StatusLabel.Text = state and "On" or "Off"
-        TweenService:Create(StatusLabel, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-            TextColor3 = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0),
-            TextTransparency = 0
+        TweenService:Create(StatusLabel, TweenInfo.new(0.4, Enum.EasingStyle.Sine), {
+            TextColor3 = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+        }):Play()
+        TweenService:Create(StatusFrame, TweenInfo.new(0.4, Enum.EasingStyle.Elastic), {
+            Size = state and UDim2.new(0, 36, 0, 36) or UDim2.new(0, 34, 0, 34)
         }):Play()
     end
 
