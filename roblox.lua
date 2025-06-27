@@ -114,37 +114,12 @@ local function addGradient(instance)
     UIGradient.Parent = instance
 end
 
--- Main Frame (Sidebar)
-local MainFrame = Instance.new("Frame")
-MainFrame.Parent = ScreenGui
-MainFrame.Size = UDim2.new(0, 250, 0, 600)
-MainFrame.Position = UDim2.new(0, -250, 0.5, -300)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-MainFrame.BackgroundTransparency = 0.1
-MainFrame.Visible = true
-addUICorner(MainFrame, 10)
-addGlow(MainFrame)
-
--- Title
-local Title = Instance.new("TextLabel")
-Title.Parent = MainFrame
-Title.Size = UDim2.new(1, 0, 0, 50)
-Title.BackgroundTransparency = 1
-Title.TextColor3 = Color3.fromRGB(0, 255, 255)
-Title.Font = Enum.Font.Code
-Title.TextSize = 24
-Title.Text = "Bidzz Mod - Bidzz Official"
-Title.TextStrokeTransparency = 0.7
-Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
-Title.Position = UDim2.new(0, 0, 0, 10)
-addUICorner(Title, 8)
-
--- Toggle Button
+-- Toggle Button (Top-Left)
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = ScreenGui
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
-ToggleButton.Text = "▶"
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.Text = "☰"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 ToggleButton.Font = Enum.Font.Code
@@ -166,6 +141,20 @@ ToggleButton.MouseLeave:Connect(function()
     }):Play()
 end)
 
+-- Main Frame (ScrollingFrame, Centered)
+local MainFrame = Instance.new("ScrollingFrame")
+MainFrame.Parent = ScreenGui
+MainFrame.Size = UDim2.new(0, 300, 0, 500)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BackgroundTransparency = 0.1
+MainFrame.ScrollBarThickness = 4
+MainFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 255)
+MainFrame.Visible = false
+MainFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+addUICorner(MainFrame, 10)
+addGlow(MainFrame)
+
 -- UI List Layout
 local UIListLayout = Instance.new("UIListLayout")
 UIListLayout.Parent = MainFrame
@@ -173,11 +162,24 @@ UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0, 8)
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.fromRGB(0, 255, 255)
+Title.Font = Enum.Font.Code
+Title.TextSize = 24
+Title.Text = "Bidzz Mod - Bidzz Official"
+Title.TextStrokeTransparency = 0.7
+Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
+addUICorner(Title, 8)
+
 -- Button Creation
 local function createButton(parent, text, color, callback)
     local Button = Instance.new("TextButton")
     Button.Parent = parent
-    Button.Size = UDim2.new(0, 220, 0, 40)
+    Button.Size = UDim2.new(0, 260, 0, 40)
     Button.BackgroundColor3 = color
     Button.TextColor3 = Color3.fromRGB(0, 255, 255)
     Button.Font = Enum.Font.Code
@@ -189,13 +191,13 @@ local function createButton(parent, text, color, callback)
 
     Button.MouseEnter:Connect(function()
         TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, 230, 0, 45),
+            Size = UDim2.new(0, 270, 0, 45),
             BackgroundColor3 = Color3.fromRGB(color.R * 255 + 20, color.G * 255 + 20, color.B * 255 + 20)
         }):Play()
     end)
     Button.MouseLeave:Connect(function()
         TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, 220, 0, 40),
+            Size = UDim2.new(0, 260, 0, 40),
             BackgroundColor3 = color
         }):Play()
     end)
@@ -207,7 +209,7 @@ end
 -- Text Boxes
 local InputFrame = Instance.new("Frame")
 InputFrame.Parent = MainFrame
-InputFrame.Size = UDim2.new(0, 220, 0, 120)
+InputFrame.Size = UDim2.new(0, 260, 0, 120)
 InputFrame.BackgroundTransparency = 1
 InputFrame.LayoutOrder = 1
 
@@ -219,7 +221,7 @@ InputLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
 local SpeedBox = Instance.new("TextBox")
 SpeedBox.Parent = InputFrame
-SpeedBox.Size = UDim2.new(0, 200, 0, 30)
+SpeedBox.Size = UDim2.new(0, 240, 0, 30)
 SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SpeedBox.TextColor3 = Color3.fromRGB(0, 255, 255)
 SpeedBox.Font = Enum.Font.Code
@@ -231,7 +233,7 @@ addGlow(SpeedBox)
 
 local JumpBox = Instance.new("TextBox")
 JumpBox.Parent = InputFrame
-JumpBox.Size = UDim2.new(0, 200, 0, 30)
+JumpBox.Size = UDim2.new(0, 240, 0, 30)
 JumpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 JumpBox.TextColor3 = Color3.fromRGB(0, 255, 255)
 JumpBox.Font = Enum.Font.Code
@@ -243,7 +245,7 @@ addGlow(JumpBox)
 
 local GravityBox = Instance.new("TextBox")
 GravityBox.Parent = InputFrame
-GravityBox.Size = UDim2.new(0, 200, 0, 30)
+GravityBox.Size = UDim2.new(0, 240, 0, 30)
 GravityBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 GravityBox.TextColor3 = Color3.fromRGB(0, 255, 255)
 GravityBox.Font = Enum.Font.Code
@@ -406,7 +408,7 @@ end)
 
 -- Hitbox
 local hitboxEnabled = false
-createButton(MainFrame, "Hitbox x6", Color3.fromRGB(40, 40, 40), function()
+createButton(MainFrame, "Hitbox x6", Color3.fromRGB(40, 40, 40),  function()
     hitboxEnabled = not hitboxEnabled
     if LocalPlayer.Character then
         for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
@@ -605,7 +607,7 @@ end)
 -- Teleport to Player
 local teleportFrame = Instance.new("Frame")
 teleportFrame.Parent = MainFrame
-teleportFrame.Size = UDim2.new(0, 220, 0, 0)
+teleportFrame.Size = UDim2.new(0, 260, 0, 0)
 teleportFrame.BackgroundTransparency = 1
 teleportFrame.ClipsDescendants = true
 teleportFrame.Visible = false
@@ -633,10 +635,10 @@ local function updateTeleportButtons()
                 table.insert(teleportButtons, button)
             end
         end
-        teleportFrame.Size = UDim2.new(0, 220, 0, teleportLayout.AbsoluteContentSize.Y)
+        teleportFrame.Size = UDim2.new(0, 260, 0, teleportLayout.AbsoluteContentSize.Y)
     else
         teleportFrame.Visible = false
-        teleportFrame.Size = UDim2.new(0, 220, 0, 0)
+        teleportFrame.Size = UDim2.new(0, 260, 0, 0)
     end
 end
 
@@ -657,19 +659,19 @@ local guiVisible = false
 ToggleButton.MouseButton1Click:Connect(function()
     guiVisible = not guiVisible
     if guiVisible then
+        MainFrame.Visible = true
         TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Position = UDim2.new(0, 10, 0.5, -300)
+            Position = UDim2.new(0.5, -150, 0.5, -250)
         }):Play()
         TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-            Text = "◀"
+            Text = "✖"
         }):Play()
-        MainFrame.Visible = true
     else
         TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-            Position = UDim2.new(0, -250, 0.5, -300)
+            Position = UDim2.new(0, -300, 0.5, -250)
         }):Play()
         TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-            Text = "▶"
+            Text = "☰"
         }):Play()
         task.delay(0.5, function()
             MainFrame.Visible = false
@@ -679,5 +681,5 @@ end)
 
 -- Canvas Size Update
 UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    MainFrame.Size = UDim2.new(0, 250, 0, math.min(UIListLayout.AbsoluteContentSize.Y + 60, 600))
+    MainFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 20)
 end)
