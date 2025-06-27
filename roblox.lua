@@ -62,7 +62,11 @@ local function createLoadingScreen()
         local angle = i * (360 / 6)
         RunService.RenderStepped:Connect(function(delta)
             angle = angle + delta * 120
+            -- Smoother orbit with easing
             Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 120, 0.5, math.sin(math.rad(angle)) * 120)
+            TweenService:Create(Particle, TweenInfo.new(0.5, Enum.EasingStyle.Sine), {
+                BackgroundTransparency = 0.4 + 0.3 * math.sin(tick() * 2)
+            }):Play()
         end)
     end
 
@@ -76,7 +80,8 @@ local function createLoadingScreen()
         for _, particle in pairs(LoadingFrame:GetChildren()) do
             if particle:IsA("Frame") then
                 TweenService:Create(particle, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundTransparency = 1
+                    BackgroundTransparency = 1,
+                    Size = UDim2.new(0, 0, 0, 0) -- Shrink particles as they fade
                 }):Play()
             end
         end
@@ -102,6 +107,7 @@ local function addGlow(instance)
     UIStroke.Transparency = 0.3
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = instance
+    return UIStroke
 end
 
 local function addGradient(instance)
@@ -122,10 +128,10 @@ ToggleButton.Position = UDim2.new(0, 10, 0, 10)
 ToggleButton.Text = "☰"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
-ToggleButton.Font = Enum.Font.Code
+ miljonerButton.Font = Enum.Font.Code
 ToggleButton.TextSize = 20
 addUICorner(ToggleButton, 10)
-addGlow(ToggleButton)
+local toggleGlow = addGlow(ToggleButton)
 addGradient(ToggleButton)
 
 ToggleButton.MouseEnter:Connect(function()
@@ -133,11 +139,19 @@ ToggleButton.MouseEnter:Connect(function()
         Size = UDim2.new(0, 55, 0, 55),
         BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     }):Play()
+    TweenService:Create(toggleGlow, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+        Thickness = 2,
+        Transparency = 0.1
+    }):Play()
 end)
 ToggleButton.MouseLeave:Connect(function()
     TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
         Size = UDim2.new(0, 50, 0, 50),
         BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    }):Play()
+    TweenService:Create(toggleGlow, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+        Thickness = 1.5,
+        Transparency = 0.3
     }):Play()
 end)
 
@@ -170,40 +184,76 @@ Title.BackgroundTransparency = 1
 Title.TextColor3 = Color3.fromRGB(0, 255, 255)
 Title.Font = Enum.Font.Code
 Title.TextSize = 24
-Title.Text = "Bidzz Mod - Bidzz Official"
+Title.Text = "Bidzz Mod"
 Title.TextStrokeTransparency = 0.7
 Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
 addUICorner(Title, 8)
 
--- Button Creation
+-- Modified Button Creation with Status Indicator
 local function createButton(parent, text, color, callback)
+    local ButtonFrame = Instance.new("Frame")
+    ButtonFrame.Parent = parent
+    ButtonFrame.Size = UDim2.new(0, 260, 0, 40)
+    ButtonFrame.BackgroundTransparency = 1
+
     local Button = Instance.new("TextButton")
-    Button.Parent = parent
-    Button.Size = UDim2.new(0, 260, 0, 40)
+    Button.Parent = ButtonFrame
+    Button.Size = UDim2.new(0, 220, 0, 40)
+    Button.Position = UDim2.new(0, 0, 0, 0)
     Button.BackgroundColor3 = color
     Button.TextColor3 = Color3.fromRGB(0, 255, 255)
     Button.Font = Enum.Font.Code
     Button.TextSize = 16
     Button.Text = text
     addUICorner(Button, 8)
-    addGlow(Button)
+    local buttonGlow = addGlow(Button)
     addGradient(Button)
+
+    local StatusLabel = Instance.new("TextLabel")
+    StatusLabel.Parent = ButtonFrame
+    StatusLabel.Size = UDim2.new(0, 40, 0, 40)
+    StatusLabel.Position = UDim2.new(1, -40, 0, 0)
+    StatusLabel.BackgroundTransparency = 1
+    StatusLabel.Text = "Off"
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+    StatusLabel.Font = Enum.Font.Code
+    StatusLabel.TextSize = 14
+    addUICorner(StatusLabel, 8)
+
+    local function updateStatus(state)
+        StatusLabel.Text = state and "On" or "Off"
+        TweenService:Create(StatusLabel, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+            TextColor3 = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0),
+            TextTransparency = 0
+        }):Play()
+    end
 
     Button.MouseEnter:Connect(function()
         TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, 270, 0, 45),
+            Size = UDim2.new(0, 230, 0, 45),
             BackgroundColor3 = Color3.fromRGB(color.R * 255 + 20, color.G * 255 + 20, color.B * 255 + 20)
+        }):Play()
+        TweenService:Create(buttonGlow, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Thickness = 2,
+            Transparency = 0.1
         }):Play()
     end)
     Button.MouseLeave:Connect(function()
         TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
-            Size = UDim2.new(0, 260, 0, 40),
+            Size = UDim2.new(0, 220, 0, 40),
             BackgroundColor3 = color
+        }):Play()
+        TweenService:Create(buttonGlow, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Thickness = 1.5,
+            Transparency = 0.3
         }):Play()
     end)
 
-    Button.MouseButton1Click:Connect(callback)
-    return Button
+    Button.MouseButton1Click:Connect(function()
+        callback(updateStatus)
+    end)
+
+    return ButtonFrame, updateStatus
 end
 
 -- Text Boxes
@@ -219,7 +269,7 @@ InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
 InputLayout.Padding = UDim.new(0, 8)
 InputLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local SpeedBox = Instance.new("TextBox")
+local SpeedBox = Instance.new("TextBox") -- Fixed: Changed "WalkSpeed" to "TextBox"
 SpeedBox.Parent = InputFrame
 SpeedBox.Size = UDim2.new(0, 240, 0, 30)
 SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -231,7 +281,7 @@ SpeedBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
 addUICorner(SpeedBox, 6)
 addGlow(SpeedBox)
 
-local JumpBox = Instance.new("TextBox")
+local JumpBox = Instance.new("TextBox") -- Fixed: Changed "JumpPower" to "TextBox"
 JumpBox.Parent = InputFrame
 JumpBox.Size = UDim2.new(0, 240, 0, 30)
 JumpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -275,16 +325,16 @@ JumpBox.FocusLost:Connect(function(enterPressed)
 end)
 
 -- Gravity
-local gravityEnabled = true
+local gravityEnabled = false
 local gravityValue = workspace.Gravity
-
-createButton(MainFrame, "Toggle Gravity", Color3.fromRGB(40, 40, 40), function()
+local gravityButton, gravityUpdateStatus = createButton(MainFrame, "Toggle Gravity", Color3.fromRGB(40, 40, 40), function(updateStatus)
     gravityEnabled = not gravityEnabled
     if gravityEnabled then
         workspace.Gravity = gravityValue
     else
         workspace.Gravity = 0
     end
+    updateStatus(gravityEnabled)
 end)
 
 GravityBox.FocusLost:Connect(function(enterPressed)
@@ -302,7 +352,6 @@ end)
 -- ESP
 local espEnabled = false
 local highlights = {}
-
 local function addHighlight(player)
     if player ~= LocalPlayer and player.Character then
         local highlight = Instance.new("Highlight")
@@ -329,7 +378,7 @@ local function removeHighlight(player)
     end
 end
 
-createButton(MainFrame, "ESP", Color3.fromRGB(40, 40, 40), function()
+local espButton, espUpdateStatus = createButton(MainFrame, "HOLOGRAM", Color3.fromRGB(40, 40, 40), function(updateStatus)
     espEnabled = not espEnabled
     if espEnabled then
         for _, player in pairs(Players:GetPlayers()) do
@@ -340,6 +389,7 @@ createButton(MainFrame, "ESP", Color3.fromRGB(40, 40, 40), function()
             removeHighlight(player)
         end
     end
+    updateStatus(espEnabled)
 end)
 
 Players.PlayerAdded:Connect(function(player)
@@ -355,7 +405,7 @@ end)
 -- Infinite Jump
 local infiniteJump = false
 local jumpConnection
-createButton(MainFrame, "Infinite Jump", Color3.fromRGB(40, 40, 40), function()
+local infiniteJumpButton, infiniteJumpUpdateStatus = createButton(MainFrame, "Infinite Jump", Color3.fromRGB(40, 40, 40), function(updateStatus)
     infiniteJump = not infiniteJump
     if infiniteJump and not jumpConnection then
         jumpConnection = UserInputService.JumpRequest:Connect(function()
@@ -367,12 +417,13 @@ createButton(MainFrame, "Infinite Jump", Color3.fromRGB(40, 40, 40), function()
         jumpConnection:Disconnect()
         jumpConnection = nil
     end
+    updateStatus(infiniteJump)
 end)
 
 -- Noclip
 local noclip = false
 local noclipConnection
-createButton(MainFrame, "Noclip", Color3.fromRGB(40, 40, 40), function()
+local noclipButton, noclipUpdateStatus = createButton(MainFrame, "Noclip", Color3.fromRGB(40, 40, 40), function(updateStatus)
     noclip = not noclip
     if noclip then
         noclipConnection = RunService.Stepped:Connect(function()
@@ -388,11 +439,12 @@ createButton(MainFrame, "Noclip", Color3.fromRGB(40, 40, 40), function()
         noclipConnection:Disconnect()
         noclipConnection = nil
     end
+    updateStatus(noclip)
 end)
 
 -- God Mode
 local godMode = false
-createButton(MainFrame, "God Mode", Color3.fromRGB(40, 40, 40), function()
+local godModeButton, godModeUpdateStatus = createButton(MainFrame, "God Mode", Color3.fromRGB(40, 40, 40), function(updateStatus)
     godMode = not godMode
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         local humanoid = LocalPlayer.Character.Humanoid
@@ -404,11 +456,12 @@ createButton(MainFrame, "God Mode", Color3.fromRGB(40, 40, 40), function()
             humanoid.Health = 100
         end
     end
+    updateStatus(godMode)
 end)
 
 -- Hitbox
 local hitboxEnabled = false
-createButton(MainFrame, "Hitbox x6", Color3.fromRGB(40, 40, 40),  function()
+local hitboxButton, hitboxUpdateStatus = createButton(MainFrame, "Hitbox x6", Color3.fromRGB(40, 40, 40), function(updateStatus)
     hitboxEnabled = not hitboxEnabled
     if LocalPlayer.Character then
         for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
@@ -423,6 +476,7 @@ createButton(MainFrame, "Hitbox x6", Color3.fromRGB(40, 40, 40),  function()
             end
         end
     end
+    updateStatus(hitboxEnabled)
 end)
 
 -- AimBot
@@ -452,7 +506,7 @@ local function getClosestPlayer()
 end
 
 local aimConnection
-createButton(MainFrame, "AimBot", Color3.fromRGB(40, 40, 40), function()
+local aimBotButton, aimBotUpdateStatus = createButton(MainFrame, "AimBot", Color3.fromRGB(40, 40, 40), function(updateStatus)
     aimEnabled = not aimEnabled
     aimIndicator.Visible = aimEnabled
     if aimEnabled then
@@ -472,6 +526,7 @@ createButton(MainFrame, "AimBot", Color3.fromRGB(40, 40, 40), function()
         end
         workspace.CurrentCamera.CameraSubject = LocalPlayer.Character
     end
+    updateStatus(aimEnabled)
 end)
 
 -- Spin
@@ -493,14 +548,15 @@ local function toggleFling()
     end
 end
 
-createButton(MainFrame, "Spin", Color3.fromRGB(40, 40, 40), function()
+local spinButton, spinUpdateStatus = createButton(MainFrame, "Spin", Color3.fromRGB(40, 40, 40), function(updateStatus)
     toggleFling()
+    updateStatus(flingEnabled)
 end)
 
 -- Particle Burst
 local particleBurstEnabled = false
 local particleConnection
-createButton(MainFrame, "Particle Burst", Color3.fromRGB(40, 40, 40), function()
+local particleButton, particleUpdateStatus = createButton(MainFrame, "Particle Burst", Color3.fromRGB(40, 40, 40), function(updateStatus)
     particleBurstEnabled = not particleBurstEnabled
     if particleBurstEnabled then
         particleConnection = RunService.Heartbeat:Connect(function()
@@ -532,26 +588,37 @@ createButton(MainFrame, "Particle Burst", Color3.fromRGB(40, 40, 40), function()
         particleConnection:Disconnect()
         particleConnection = nil
     end
+    updateStatus(particleBurstEnabled)
 end)
 
 -- Fly
-createButton(MainFrame, "Fly", Color3.fromRGB(40, 40, 40), function()
+local flyEnabled = false
+local flyButton, flyUpdateStatus = createButton(MainFrame, "Fly", Color3.fromRGB(40, 40, 40), function(updateStatus)
+    flyEnabled = not flyEnabled
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"))()
+    updateStatus(flyEnabled)
 end)
 
 -- Sus
-createButton(MainFrame, "Sus", Color3.fromRGB(40, 40, 40), function()
+local susEnabled = false
+local susButton, susUpdateStatus = createButton(MainFrame, "Sus", Color3.fromRGB(40, 40, 40), function(updateStatus)
+    susEnabled = not susEnabled
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/nahhhbrrr/refs/heads/main/base.lua"))()
+    updateStatus(susEnabled)
 end)
 
 -- InfiniteYield
-createButton(MainFrame, "InfiniteYield", Color3.fromRGB(40, 40, 40), function()
+local infiniteYieldEnabled = false
+local infiniteYieldButton, infiniteYieldUpdateStatus = createButton(MainFrame, "InfiniteYield", Color3.fromRGB(40, 40, 40), function(updateStatus)
+    infiniteYieldEnabled = not infiniteYieldEnabled
     loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    updateStatus(infiniteYieldEnabled)
 end)
 
 -- Freecam
-createButton(MainFrame, "Freecam", Color3.fromRGB(40, 40, 40), function()
-    local freecamEnabled = not _G.freecamEnabled
+local freecamEnabled = false
+local freecamButton, freecamUpdateStatus = createButton(MainFrame, "Freecam", Color3.fromRGB(40, 40, 40), function(updateStatus)
+    freecamEnabled = not freecamEnabled
     _G.freecamEnabled = freecamEnabled
     local camera = workspace.CurrentCamera
     local speed = 50
@@ -585,11 +652,12 @@ createButton(MainFrame, "Freecam", Color3.fromRGB(40, 40, 40), function()
         camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
         game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer("Freecam off!", "All")
     end
+    updateStatus(freecamEnabled)
 end)
 
 -- XRay
 local isInvisible = false
-createButton(MainFrame, "XRay", Color3.fromRGB(40, 40, 40), function()
+local xrayButton, xrayUpdateStatus = createButton(MainFrame, "XRay", Color3.fromRGB(40, 40, 40), function(updateStatus)
     isInvisible = not isInvisible
     for _, object in pairs(game:GetDescendants()) do
         if (object:IsA("BasePart") or object:IsA("Decal") or object:IsA("Texture")) and
@@ -597,11 +665,13 @@ createButton(MainFrame, "XRay", Color3.fromRGB(40, 40, 40), function()
             object.Transparency = isInvisible and 0.8 or 0
         end
     end
+    updateStatus(isInvisible)
 end)
 
 -- Rejoin
-createButton(MainFrame, "Rejoin Game", Color3.fromRGB(40, 40, 40), function()
+local rejoinButton, rejoinUpdateStatus = createButton(MainFrame, "Rejoin Game", Color3.fromRGB(40, 40, 40), function(updateStatus)
     TeleportService:Teleport(game.PlaceId, LocalPlayer)
+    updateStatus(false) -- Rejoin doesn't maintain state
 end)
 
 -- Teleport to Player
@@ -627,7 +697,7 @@ local function updateTeleportButtons()
         teleportFrame.Visible = true
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= LocalPlayer then
-                local button = createButton(teleportFrame, "TP to " .. player.Name, Color3.fromRGB(40, 40, 40), function()
+                local button, _ = createButton(teleportFrame, "Bidzz TP " .. player.Name, Color3.fromRGB(40, 40, 40), function()
                     if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                         LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
                     end
@@ -642,9 +712,10 @@ local function updateTeleportButtons()
     end
 end
 
-createButton(MainFrame, "Teleport to Player", Color3.fromRGB(40, 40, 40), function()
+local teleportButton, teleportUpdateStatus = createButton(MainFrame, "Teleport to Player", Color3.fromRGB(40, 40, 40), function(updateStatus)
     teleportVisible = not teleportVisible
     updateTeleportButtons()
+    updateStatus(teleportVisible)
 end)
 
 Players.PlayerAdded:Connect(function(player)
@@ -654,24 +725,28 @@ Players.PlayerRemoving:Connect(function(player)
     if teleportVisible then updateTeleportButtons() end
 end)
 
--- GUI Toggle
+-- GUI Toggle with Enhanced Animation
 local guiVisible = false
 ToggleButton.MouseButton1Click:Connect(function()
     guiVisible = not guiVisible
     if guiVisible then
         MainFrame.Visible = true
-        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Position = UDim2.new(0.5, -150, 0.5, -250)
+        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0.5, -150, 0.5, -250),
+            BackgroundTransparency = 0.1
         }):Play()
         TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-            Text = "✖"
+            Text = "✖",
+            Rotation = 90
         }):Play()
     else
-        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-            Position = UDim2.new(0, -300, 0.5, -250)
+        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.In), {
+            Position = UDim2.new(0, -300, 0.5, -250),
+            BackgroundTransparency = 0.5
         }):Play()
         TweenService:Create(ToggleButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-            Text = "☰"
+            Text = "☰",
+            Rotation = 0
         }):Play()
         task.delay(0.5, function()
             MainFrame.Visible = false
