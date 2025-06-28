@@ -30,22 +30,6 @@ CreditLabel.TextStrokeTransparency = 0.7
 CreditLabel.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
 CreditLabel.ZIndex = 10
 
--- Tambahkan UIStroke untuk efek glow
-local creditGlow = addGlow(CreditLabel)
-
--- Animasi transisi warna dan glow berulang
-local function animateCredit()
-    TweenService:Create(CreditLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-        TextColor3 = Color3.fromRGB(128, 0, 255) -- Berpindah ke ungu
-    }):Play()
-    TweenService:Create(creditGlow, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-        Transparency = 0.1,
-        Thickness = 2
-    }):Play()
-end
-
-animateCredit()
-
 -- Loading Screen
 local function createLoadingScreen()
     local LoadingFrame = Instance.new("Frame")
@@ -151,6 +135,21 @@ local function addGradient(instance)
     UIGradient.Rotation = 90
     UIGradient.Parent = instance
 end
+
+-- Animasi transisi untuk CreditLabel
+local function animateCredit()
+    TweenService:Create(CreditLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        TextColor3 = Color3.fromRGB(128, 0, 255) -- Berpindah ke ungu
+    }):Play()
+    TweenService:Create(CreditLabel:FindFirstChildOfClass("UIStroke"), TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        Transparency = 0.1,
+        Thickness = 2
+    }):Play()
+end
+
+-- Tambahkan glow dan jalankan animasi untuk kredit
+local creditGlow = addGlow(CreditLabel)
+animateCredit()
 
 -- Toggle Button (Moved Slightly Down)
 local ToggleButton = Instance.new("TextButton")
