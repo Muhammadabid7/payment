@@ -289,7 +289,7 @@ InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
 InputLayout.Padding = UDim.new(0, 8)
 InputLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local SpeedBox = Instance.new("TextBox")
+local SpeedBox = Instance.new("Walk Speed")
 SpeedBox.Parent = InputFrame
 SpeedBox.Size = UDim2.new(0, 240, 0, 30)
 SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -302,7 +302,7 @@ SpeedBox.ZIndex = 6
 addUICorner(SpeedBox, 6)
 addGlow(SpeedBox)
 
-local JumpBox = Instance.new("TextBox")
+local JumpBox = Instance.new("Jump Power")
 JumpBox.Parent = InputFrame
 JumpBox.Size = UDim2.new(0, 240, 0, 30)
 JumpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -315,7 +315,7 @@ JumpBox.ZIndex = 6
 addUICorner(JumpBox, 6)
 addGlow(JumpBox)
 
-local GravityBox = Instance.new("TextBox")
+local GravityBox = Instance.new("Gravity")
 GravityBox.Parent = InputFrame
 GravityBox.Size = UDim2.new(0, 240, 0, 30)
 GravityBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
