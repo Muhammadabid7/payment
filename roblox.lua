@@ -37,7 +37,7 @@ local function createLoadingScreen()
     LoadingText.Size = UDim2.new(0, 500, 0, 80)
     LoadingText.Position = UDim2.new(0.5, -250, 0.5, -40)
     LoadingText.BackgroundTransparency = 1
-    LoadingText.Text = "Bidzz Mod Loading..."
+    LoadingText.Text = "BY BIDZZ OFFICIAL 🇮🇩"
     LoadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
     LoadingText.Font = Enum.Font.Code
     LoadingText.TextSize = 40
@@ -350,7 +350,7 @@ end)
 -- Gravity
 local gravityEnabled = false
 local gravityValue = workspace.Gravity
-local gravityButton, gravityUpdateStatus = createButton(MainFrame, "Toggle Gravity", Color3.fromRGB(40, 40, 40), function(updateStatus)
+local gravityButton, gravityUpdateStatus = createButton(MainFrame, "Gravity Function", Color3.fromRGB(40, 40, 40), function(updateStatus)
     gravityEnabled = not gravityEnabled
     if gravityEnabled then
         workspace.Gravity = gravityValue
