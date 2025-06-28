@@ -8,19 +8,32 @@ local TeleportService = game:GetService("TeleportService")
 
 local LocalPlayer = Players.LocalPlayer
 
+-- Debug function
+local function debugPrint(message)
+    print("[BidzzMod Debug] " .. message)
+end
+
 -- Create ScreenGui
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "BidzzMod"
-ScreenGui.Parent = CoreGui
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.IgnoreGuiInset = true -- Ensure GUI respects screen boundaries
-ScreenGui.ResetOnSpawn = false -- Prevent GUI from resetting on player respawn
+local success, ScreenGui = pcall(function()
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "BidzzMod"
+    gui.Parent = CoreGui
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.IgnoreGuiInset = true
+    gui.ResetOnSpawn = false
+    return gui
+end)
+if not success then
+    debugPrint("Error creating ScreenGui: " .. ScreenGui)
+    return -- Hentikan eksekusi jika gagal membuat ScreenGui
+end
+debugPrint("ScreenGui created successfully")
 
 -- Credit Label
 local CreditLabel = Instance.new("TextLabel")
 CreditLabel.Parent = ScreenGui
 CreditLabel.Size = UDim2.new(0, 200, 0, 30)
-CreditLabel.Position = UDim2.new(0, 20, 1, -50) -- Sedikit menjauh dari pojok kiri bawah
+CreditLabel.Position = UDim2.new(0, 20, 1, -50)
 CreditLabel.BackgroundTransparency = 1
 CreditLabel.Text = "BY BIDZZ OFFICIAL 🇮🇩"
 CreditLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
@@ -29,85 +42,7 @@ CreditLabel.TextSize = 16
 CreditLabel.TextStrokeTransparency = 0.7
 CreditLabel.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
 CreditLabel.ZIndex = 10
-
--- Loading Screen
-local function createLoadingScreen()
-    local LoadingFrame = Instance.new("Frame")
-    LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
-    LoadingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    LoadingFrame.BackgroundTransparency = 0.3
-    LoadingFrame.Parent = ScreenGui
-    LoadingFrame.ZIndex = 100
-
-    local UIGradient = Instance.new("UIGradient")
-    UIGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 0, 160))
-    })
-    UIGradient.Rotation = 90
-    UIGradient.Parent = LoadingFrame
-
-    local LoadingText = Instance.new("TextLabel")
-    LoadingText.Size = UDim2.new(0, 500, 0, 80)
-    LoadingText.Position = UDim2.new(0.5, -250, 0.5, -40)
-    LoadingText.BackgroundTransparency = 1
-    LoadingText.Text = "Bidzz Mod Loading..."
-    LoadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
-    LoadingText.Font = Enum.Font.Code
-    LoadingText.TextSize = 40
-    LoadingText.TextStrokeTransparency = 0.7
-    LoadingText.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
-    LoadingText.Parent = LoadingFrame
-
-    local function pulseText()
-        TweenService:Create(LoadingText, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-            TextTransparency = 0.2
-        }):Play()
-    end
-    pulseText()
-
-    for i = 1, 6 do
-        local Particle = Instance.new("Frame")
-        Particle.Size = UDim2.new(0, 15, 0, 15)
-        Particle.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-        Particle.BackgroundTransparency = 0.4
-        Particle.Parent = LoadingFrame
-        local UICorner = Instance.new("UICorner")
-        UICorner.CornerRadius = UDim.new(0.5, 0)
-        UICorner.Parent = Particle
-
-        local angle = i * (360 / 6)
-        RunService.RenderStepped:Connect(function(delta)
-            angle = angle + delta * 120
-            Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 120, 0.5, math.sin(math.rad(angle)) * 120)
-            TweenService:Create(Particle, TweenInfo.new(0.5, Enum.EasingStyle.Sine), {
-                BackgroundTransparency = 0.4 + 0.3 * math.sin(tick() * 2)
-            }):Play()
-        end)
-    end
-
-    task.delay(2.5, function()
-        TweenService:Create(LoadingFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 1
-        }):Play()
-        TweenService:Create(LoadingText, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            TextTransparency = 1
-        }):Play()
-        for _, particle in pairs(LoadingFrame:GetChildren()) do
-            if particle:IsA("Frame") then
-                TweenService:Create(particle, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    BackgroundTransparency = 1,
-                    Size = UDim2.new(0, 0, 0, 0)
-                }):Play()
-            end
-        end
-        task.delay(0.8, function()
-            LoadingFrame:Destroy()
-        end)
-    end)
-end
-
-createLoadingScreen()
+debugPrint("CreditLabel created")
 
 -- UI Helper Functions
 local function addUICorner(instance, cornerRadius)
@@ -138,33 +73,39 @@ end
 
 -- Animasi transisi untuk CreditLabel
 local function animateCredit()
-    TweenService:Create(CreditLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-        TextColor3 = Color3.fromRGB(128, 0, 255) -- Berpindah ke ungu
-    }):Play()
-    TweenService:Create(CreditLabel:FindFirstChildOfClass("UIStroke"), TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-        Transparency = 0.1,
-        Thickness = 2
-    }):Play()
+    local success, err = pcall(function()
+        TweenService:Create(CreditLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+            TextColor3 = Color3.fromRGB(128, 0, 255)
+        }):Play()
+        TweenService:Create(CreditLabel:FindFirstChildOfClass("UIStroke"), TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+            Transparency = 0.1,
+            Thickness = 2
+        }):Play()
+    end)
+    if not success then
+        debugPrint("Error animating CreditLabel: " .. err)
+    end
 end
 
--- Tambahkan glow dan jalankan animasi untuk kredit
 local creditGlow = addGlow(CreditLabel)
 animateCredit()
+debugPrint("CreditLabel animation started")
 
--- Toggle Button (Moved Slightly Down)
+-- Toggle Button
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = ScreenGui
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-ToggleButton.Position = UDim2.new(0, 10, 0, 50) -- Moved 50 pixels down
+ToggleButton.Position = UDim2.new(0, 10, 0, 50)
 ToggleButton.Text = "☰"
 ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 ToggleButton.Font = Enum.Font.Code
 ToggleButton.TextSize = 20
-ToggleButton.ZIndex = 10 -- High ZIndex for clickability
+ToggleButton.ZIndex = 10
 addUICorner(ToggleButton, 10)
 local toggleGlow = addGlow(ToggleButton)
 addGradient(ToggleButton)
+debugPrint("ToggleButton created")
 
 ToggleButton.MouseEnter:Connect(function()
     TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
@@ -187,11 +128,11 @@ ToggleButton.MouseLeave:Connect(function()
     }):Play()
 end)
 
--- Main Frame (ScrollingFrame, Centered)
+-- Main Frame
 local MainFrame = Instance.new("ScrollingFrame")
 MainFrame.Parent = ScreenGui
 MainFrame.Size = UDim2.new(0, 300, 0, 500)
-MainFrame.Position = UDim2.new(0, -300, 0.5, -250) -- Start off-screen
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -250) -- Mulai di tengah untuk debug
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.ScrollBarThickness = 4
@@ -201,6 +142,7 @@ MainFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 MainFrame.ZIndex = 5
 addUICorner(MainFrame, 10)
 addGlow(MainFrame)
+debugPrint("MainFrame created")
 
 -- UI List Layout
 local UIListLayout = Instance.new("UIListLayout")
@@ -221,8 +163,9 @@ Title.Text = "Bidzz Mod"
 Title.TextStrokeTransparency = 0.7
 Title.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
 addUICorner(Title, 8)
+debugPrint("Title created")
 
--- Button Creation with Enhanced Status Indicator
+-- Button Creation
 local function createButton(parent, text, color, callback)
     local ButtonFrame = Instance.new("Frame")
     ButtonFrame.Parent = parent
@@ -243,7 +186,6 @@ local function createButton(parent, text, color, callback)
     local buttonGlow = addGlow(Button)
     addGradient(Button)
 
-    -- Status Frame
     local StatusFrame = Instance.new("Frame")
     StatusFrame.Parent = ButtonFrame
     StatusFrame.Size = UDim2.new(0, 34, 0, 34)
@@ -298,7 +240,7 @@ local function createButton(parent, text, color, callback)
     end)
 
     Button.MouseButton1Click:Connect(function()
-        print("Button clicked: " .. text) -- Debug print
+        debugPrint("Button clicked: " .. text)
         callback(updateStatus)
     end)
 
@@ -311,6 +253,7 @@ InputFrame.Parent = MainFrame
 InputFrame.Size = UDim2.new(0, 260, 0, 120)
 InputFrame.BackgroundTransparency = 1
 InputFrame.LayoutOrder = 1
+debugPrint("InputFrame created")
 
 local InputLayout = Instance.new("UIListLayout")
 InputLayout.Parent = InputFrame
@@ -356,6 +299,7 @@ GravityBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
 GravityBox.ZIndex = 6
 addUICorner(GravityBox, 6)
 addGlow(GravityBox)
+debugPrint("TextBoxes created")
 
 -- Speed and Jump Handlers
 SpeedBox.FocusLost:Connect(function(enterPressed)
@@ -363,6 +307,7 @@ SpeedBox.FocusLost:Connect(function(enterPressed)
         local speed = tonumber(SpeedBox.Text)
         if speed and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
             LocalPlayer.Character.Humanoid.WalkSpeed = speed
+            debugPrint("WalkSpeed set to: " .. speed)
         end
     end
 end)
@@ -372,6 +317,7 @@ JumpBox.FocusLost:Connect(function(enterPressed)
         local jump = tonumber(JumpBox.Text)
         if jump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
             LocalPlayer.Character.Humanoid.JumpPower = jump
+            debugPrint("JumpPower set to: " .. jump)
         end
     end
 end)
@@ -387,6 +333,7 @@ local gravityButton, gravityUpdateStatus = createButton(MainFrame, "Toggle Gravi
         workspace.Gravity = 0
     end
     updateStatus(gravityEnabled)
+    debugPrint("Gravity toggled: " .. tostring(gravityEnabled))
 end)
 
 GravityBox.FocusLost:Connect(function(enterPressed)
@@ -397,6 +344,7 @@ GravityBox.FocusLost:Connect(function(enterPressed)
             if gravityEnabled then
                 workspace.Gravity = gravityValue
             end
+            debugPrint("Gravity set to: " .. gravity)
         end
     end
 end)
@@ -411,6 +359,7 @@ local function addHighlight(player)
         highlight.FillColor = Color3.fromRGB(0, 255, 255)
         highlight.Parent = player.Character
         highlights[player] = highlight
+        debugPrint("Highlight added for player: " .. player.Name)
     end
     player.CharacterAdded:Connect(function(character)
         if espEnabled and player ~= LocalPlayer then
@@ -419,6 +368,7 @@ local function addHighlight(player)
             highlight.FillColor = Color3.fromRGB(0, 255, 255)
             highlight.Parent = character
             highlights[player] = highlight
+            debugPrint("Highlight added for new character: " .. player.Name)
         end
     end)
 end
@@ -427,6 +377,7 @@ local function removeHighlight(player)
     if highlights[player] then
         highlights[player]:Destroy()
         highlights[player] = nil
+        debugPrint("Highlight removed for player: " .. player.Name)
     end
 end
 
@@ -442,6 +393,7 @@ local espButton, espUpdateStatus = createButton(MainFrame, "HOLOGRAM", Color3.fr
         end
     end
     updateStatus(espEnabled)
+    debugPrint("ESP toggled: " .. tostring(espEnabled))
 end)
 
 Players.PlayerAdded:Connect(function(player)
@@ -463,6 +415,7 @@ local infiniteJumpButton, infiniteJumpUpdateStatus = createButton(MainFrame, "In
         jumpConnection = UserInputService.JumpRequest:Connect(function()
             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                 LocalPlayer.Character.Humanoid:ChangeState("Jumping")
+                debugPrint("Infinite Jump triggered")
             end
         end)
     elseif jumpConnection then
@@ -470,6 +423,7 @@ local infiniteJumpButton, infiniteJumpUpdateStatus = createButton(MainFrame, "In
         jumpConnection = nil
     end
     updateStatus(infiniteJump)
+    debugPrint("Infinite Jump toggled: " .. tostring(infiniteJump))
 end)
 
 -- Noclip
@@ -492,6 +446,7 @@ local noclipButton, noclipUpdateStatus = createButton(MainFrame, "Noclip", Color
         noclipConnection = nil
     end
     updateStatus(noclip)
+    debugPrint("Noclip toggled: " .. tostring(noclip))
 end)
 
 -- God Mode
@@ -509,6 +464,7 @@ local godModeButton, godModeUpdateStatus = createButton(MainFrame, "God Mode", C
         end
     end
     updateStatus(godMode)
+    debugPrint("God Mode toggled: " .. tostring(godMode))
 end)
 
 -- Hitbox
@@ -529,6 +485,7 @@ local hitboxButton, hitboxUpdateStatus = createButton(MainFrame, "Hitbox x6", Co
         end
     end
     updateStatus(hitboxEnabled)
+    debugPrint("Hitbox toggled: " .. tostring(hitboxEnabled))
 end)
 
 -- AimBot
@@ -542,6 +499,7 @@ aimIndicator.ZIndex = 10
 addUICorner(aimIndicator, 5)
 addGlow(aimIndicator)
 aimIndicator.Parent = ScreenGui
+debugPrint("AimIndicator created")
 
 local function getClosestPlayer()
     local closestPlayer = nil
@@ -549,7 +507,7 @@ local function getClosestPlayer()
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local distance = (LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
-            if distance < closestDistance then
+            if distance < < closestDistance then
                 closestDistance = distance
                 closestPlayer = player
             end
@@ -580,6 +538,7 @@ local aimBotButton, aimBotUpdateStatus = createButton(MainFrame, "AimBot", Color
         workspace.CurrentCamera.CameraSubject = LocalPlayer.Character
     end
     updateStatus(aimEnabled)
+    debugPrint("AimBot toggled: " .. tostring(aimEnabled))
 end)
 
 -- Spin
@@ -588,7 +547,7 @@ local flingConnection
 local function toggleFling()
     flingEnabled = not flingEnabled
     if flingEnabled then
-        flingConnection = RunService.Heartbeat:Connect(function()
+        FlingConnection = RunService.Heartbeat:Connect(function()
             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(100), 0)
             end
@@ -604,6 +563,7 @@ end
 local spinButton, spinUpdateStatus = createButton(MainFrame, "Spin", Color3.fromRGB(40, 40, 40), function(updateStatus)
     toggleFling()
     updateStatus(flingEnabled)
+    debugPrint("Spin toggled: " .. tostring(flingEnabled))
 end)
 
 -- Particle Burst
@@ -642,30 +602,49 @@ local particleButton, particleUpdateStatus = createButton(MainFrame, "Particle B
         particleConnection = nil
     end
     updateStatus(particleBurstEnabled)
+    debugPrint("Particle Burst toggled: " .. tostring(particleBurstEnabled))
 end)
 
 -- Fly
 local flyEnabled = false
 local flyButton, flyUpdateStatus = createButton(MainFrame, "Fly", Color3.fromRGB(40, 40, 40), function(updateStatus)
     flyEnabled = not flyEnabled
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"))()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"))()
+    end)
+    if not success then
+        debugPrint("Error loading Fly script: " .. err)
+    end
     updateStatus(flyEnabled)
+    debugPrint("Fly toggled: " .. tostring(flyEnabled))
 end)
 
 -- Sus
 local susEnabled = false
 local susButton, susUpdateStatus = createButton(MainFrame, "Sus", Color3.fromRGB(40, 40, 40), function(updateStatus)
     susEnabled = not susEnabled
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/nahhhbrrr/refs/heads/main/base.lua"))()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/nahhhbrrr/refs/heads/main/base.lua"))()
+    end)
+    if not success then
+        debugPrint("Error loading Sus script: " .. err)
+    end
     updateStatus(susEnabled)
+    debugPrint("Sus toggled: " .. tostring(susEnabled))
 end)
 
 -- InfiniteYield
 local infiniteYieldEnabled = false
 local infiniteYieldButton, infiniteYieldUpdateStatus = createButton(MainFrame, "InfiniteYield", Color3.fromRGB(40, 40, 40), function(updateStatus)
     infiniteYieldEnabled = not infiniteYieldEnabled
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end)
+    if not success then
+        debugPrint("Error loading InfiniteYield script: " .. err)
+    end
     updateStatus(infiniteYieldEnabled)
+    debugPrint("InfiniteYield toggled: " .. tostring(infiniteYieldEnabled))
 end)
 
 -- Freecam
@@ -699,13 +678,24 @@ local freecamButton, freecamUpdateStatus = createButton(MainFrame, "Freecam", Co
             camera.CFrame = camera.CFrame * CFrame.Angles(-mouse.Delta.Y * 0.002, 0, 0)
             camera.CFrame = camera.CFrame + camera.CFrame:VectorToWorldSpace(moveDirection)
         end)
-        game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer("Freecam activated!", "All")
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer("Freecam activated!", "All")
+        end)
+        if not success then
+            debugPrint("Error sending Freecam chat message: " .. err)
+        end
     else
         camera.CameraType = Enum.CameraType.Custom
         camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
-        game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer("Freecam off!", "All")
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer("Freecam off!", "All")
+        end)
+        if not success then
+            debugPrint("Error sending Freecam off chat message: " .. err)
+        end
     end
     updateStatus(freecamEnabled)
+    debugPrint("Freecam toggled: " .. tostring(freecamEnabled))
 end)
 
 -- XRay
@@ -719,11 +709,17 @@ local xrayButton, xrayUpdateStatus = createButton(MainFrame, "XRay", Color3.from
         end
     end
     updateStatus(isInvisible)
+    debugPrint("XRay toggled: " .. tostring(isInvisible))
 end)
 
 -- Rejoin
 local rejoinButton, rejoinUpdateStatus = createButton(MainFrame, "Rejoin Game", Color3.fromRGB(40, 40, 40), function(updateStatus)
-    TeleportService:Teleport(game.PlaceId, LocalPlayer)
+    local success, err = pcall(function()
+        TeleportService:Teleport(game.PlaceId, LocalPlayer)
+    end)
+    if not success then
+        debugPrint("Error rejoining game: " .. err)
+    end
     updateStatus(false)
 end)
 
@@ -735,6 +731,7 @@ teleportFrame.BackgroundTransparency = 1
 teleportFrame.ClipsDescendants = true
 teleportFrame.Visible = false
 teleportFrame.ZIndex = 5
+debugPrint("TeleportFrame created")
 
 local teleportLayout = Instance.new("UIListLayout")
 teleportLayout.Parent = teleportFrame
@@ -754,6 +751,7 @@ local function updateTeleportButtons()
                 local button, _ = createButton(teleportFrame, "Bidzz TP " .. player.Name, Color3.fromRGB(40, 40, 40), function()
                     if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                         LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+                        debugPrint("Teleported to player: " .. player.Name)
                     end
                 end)
                 table.insert(teleportButtons, button)
@@ -764,6 +762,7 @@ local function updateTeleportButtons()
         teleportFrame.Visible = false
         teleportFrame.Size = UDim2.new(0, 260, 0, 0)
     end
+    debugPrint("Teleport buttons updated, visible: " .. tostring(teleportVisible))
 end
 
 local teleportButton, teleportUpdateStatus = createButton(MainFrame, "Teleport to Player", Color3.fromRGB(40, 40, 40), function(updateStatus)
@@ -779,10 +778,9 @@ Players.PlayerRemoving:Connect(function(player)
     if teleportVisible then updateTeleportButtons() end
 end)
 
--- GUI Toggle with Debug Print
+-- GUI Toggle
 local guiVisible = false
 ToggleButton.MouseButton1Click:Connect(function()
-    print("ToggleButton clicked, guiVisible: " .. tostring(guiVisible)) -- Debug print
     guiVisible = not guiVisible
     if guiVisible then
         MainFrame.Visible = true
@@ -807,9 +805,98 @@ ToggleButton.MouseButton1Click:Connect(function()
             MainFrame.Visible = false
         end)
     end
+    debugPrint("GUI toggled, visible: " .. tostring(guiVisible))
 end)
 
 -- Canvas Size Update
 UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     MainFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 20)
+    debugPrint("Canvas size updated")
 end)
+
+-- Loading Screen (di akhir untuk mencegah penghentian eksekusi)
+local function createLoadingScreen()
+    local success, err = pcall(function()
+        local LoadingFrame = Instance.new("Frame")
+        LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
+        LoadingFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        LoadingFrame.BackgroundTransparency = 0.3
+        LoadingFrame.Parent = ScreenGui
+        LoadingFrame.ZIndex = 100
+
+        local UIGradient = Instance.new("UIGradient")
+        UIGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 0, 160))
+        })
+        UIGradient.Rotation = 90
+        UIGradient.Parent = LoadingFrame
+
+        local LoadingText = Instance.new("TextLabel")
+        LoadingText.Size = UDim2.new(0, 500, 0, 80)
+        LoadingText.Position = UDim2.new(0.5, -250, 0.5, -40)
+        LoadingText.BackgroundTransparency = 1
+        LoadingText.Text = "Bidzz Mod Loading..."
+        LoadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
+        LoadingText.Font = Enum.Font.Code
+        LoadingText.TextSize = 40
+        LoadingText.TextStrokeTransparency = 0.7
+        LoadingText.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
+        LoadingText.Parent = LoadingFrame
+
+        local function pulseText()
+            TweenService:Create(LoadingText, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+                TextTransparency = 0.2
+            }):Play()
+        end
+        pulseText()
+
+        for i = 1, 6 do
+            local Particle = Instance.new("Frame")
+            Particle.Size = UDim2.new(0, 15, 0, 15)
+            Particle.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+            Particle.BackgroundTransparency = 0.4
+            Particle.Parent = LoadingFrame
+            local UICorner = Instance.new("UICorner")
+            UICorner.CornerRadius = UDim.new(0.5, 0)
+            UICorner.Parent = Particle
+
+            local angle = i * (360 / 6)
+            RunService.RenderStepped:Connect(function(delta)
+                angle = angle + delta * 120
+                Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 120, 0.5, math.sin(math.rad(angle)) * 120)
+                TweenService:Create(Particle, TweenInfo.new(0.5, Enum.EasingStyle.Sine), {
+                    BackgroundTransparency = 0.4 + 0.3 * math.sin(tick() * 2)
+                }):Play()
+            end)
+        end
+
+        task.delay(2.5, function()
+            TweenService:Create(LoadingFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 1
+            }):Play()
+            TweenService:Create(LoadingText, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                TextTransparency = 1
+            }):Play()
+            for _, particle in pairs(LoadingFrame:GetChildren()) do
+                if particle:IsA("Frame") then
+                    TweenService:Create(particle, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 1,
+                        Size = UDim2.new(0, 0, 0, 0)
+                    }):Play()
+                end
+            end
+            task.delay(0.8, function()
+                LoadingFrame:Destroy()
+            end)
+        end)
+    end)
+    if not success then
+        debugPrint("Error in createLoadingScreen: " .. err)
+    else
+        debugPrint("Loading screen created")
+    end
+end
+
+createLoadingScreen()
+debugPrint("Script execution completed")
