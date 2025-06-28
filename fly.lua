@@ -11,14 +11,14 @@ local minus = Instance.new("TextButton")
 local closebutton = Instance.new("TextButton")
 
 -- ScreenGui Setup
-main.Name = "BidzzFly"
+main.Name = "RedTerminalFly"
 main.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 main.ResetOnSpawn = false
 
 -- Main Frame
 Frame.Parent = main
-Frame.BackgroundColor3 = Color3.fromRGB(0, 25, 50) -- Changed to dark blue
+Frame.BackgroundColor3 = Color3.fromRGB(25, 0, 0)
 Frame.Size = UDim2.new(0, 300, 0, 180)
 Frame.Position = UDim2.new(0.5, -150, 0.5, -90)
 Frame.Active = true
@@ -29,7 +29,7 @@ Frame.ClipsDescendants = true
 local stroke = Instance.new("UIStroke")
 stroke.Parent = Frame
 stroke.Thickness = 2
-stroke.Color = Color3.fromRGB(0, 150, 255) -- Changed to bright blue
+stroke.Color = Color3.fromRGB(200, 0, 0)
 stroke.Transparency = 0.2
 
 local corner = Instance.new("UICorner")
@@ -38,36 +38,36 @@ corner.Parent = Frame
 
 -- Title Bar
 titleBar.Parent = Frame
-titleBar.BackgroundColor3 = Color3.fromRGB(0, 35, 70) -- Changed to darker blue
+titleBar.BackgroundColor3 = Color3.fromRGB(35, 0, 0)
 titleBar.Size = UDim2.new(1, 0, 0, 35)
 titleBar.BorderSizePixel = 0
 
--- Title Label
+-- Title Label с фоном и перемещением вверх
 titleLabel.Parent = titleBar
-titleLabel.BackgroundColor3 = Color3.fromRGB(0, 45, 90) -- Changed to medium blue
+titleLabel.BackgroundColor3 = Color3.fromRGB(45, 0, 0)
 titleLabel.BackgroundTransparency = 0.3
 titleLabel.Size = UDim2.new(1, -40, 0, 25)
 titleLabel.Position = UDim2.new(0, 10, 0, 5)
 titleLabel.Font = Enum.Font.Code
-titleLabel.Text = "BIDZZ FLY🕊️"
-titleLabel.TextColor3 = Color3.fromRGB(80, 180, 255) -- Changed to light blue
+titleLabel.Text = "Bidzz FLY🕊️"
+titleLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
 titleLabel.TextSize = 18
 titleLabel.TextXAlignment = Enum.TextXAlignment.Left
 titleLabel.TextStrokeTransparency = 0.6
-titleLabel.TextStrokeColor3 = Color3.fromRGB(0, 120, 200) -- Changed to medium blue
+titleLabel.TextStrokeColor3 = Color3.fromRGB(200, 0, 0)
 local titleCorner = Instance.new("UICorner")
 titleCorner.CornerRadius = UDim.new(0, 6)
 titleCorner.Parent = titleLabel
 
--- Unified Button Styling Function
+-- Унифицированный стиль кнопок
 local function styleButton(btn)
-    btn.BackgroundColor3 = Color3.fromRGB(0, 45, 90) -- Changed to medium blue
-    btn.BorderColor3 = Color3.fromRGB(0, 120, 200) -- Changed to medium blue
+    btn.BackgroundColor3 = Color3.fromRGB(45, 0, 0)
+    btn.BorderColor3 = Color3.fromRGB(180, 0, 0)
     btn.Font = Enum.Font.Code
-    btn.TextColor3 = Color3.fromRGB(80, 180, 255) -- Changed to light blue
+    btn.TextColor3 = Color3.fromRGB(255, 80, 80)
     btn.TextSize = 16
     btn.TextStrokeTransparency = 0.6
-    btn.TextStrokeColor3 = Color3.fromRGB(0, 120, 200) -- Changed to medium blue
+    btn.TextStrokeColor3 = Color3.fromRGB(200, 0, 0)
     local btnCorner = Instance.new("UICorner")
     btnCorner.CornerRadius = UDim.new(0, 8)
     btnCorner.Parent = btn
@@ -89,11 +89,11 @@ down.Size = UDim2.new(0, 80, 0, 40)
 down.Text = "DOWN"
 styleButton(down)
 
--- Fly Toggle Button
+-- Fly Toggle Button (уменьшена и сдвинута вправо)
 onof.Name = "onof"
 onof.Parent = Frame
-onof.Position = UDim2.new(0.73, 0, 0.62, 0)
-onof.Size = UDim2.new(0, 60, 0, 40)
+onof.Position = UDim2.new(0.73, 0, 0.62, 0) -- Сдвинуто вправо с 0.65 до 0.73
+onof.Size = UDim2.new(0, 60, 0, 40) -- Уменьшено с 80 до 60 по ширине
 onof.Text = "FLY"
 styleButton(onof)
 
@@ -108,16 +108,16 @@ styleButton(plus)
 
 speed.Name = "speed"
 speed.Parent = Frame
-speed.BackgroundColor3 = Color3.fromRGB(0, 35, 70) -- Changed to darker blue
-speed.BorderColor3 = Color3.fromRGB(0, 120, 200) -- Changed to medium blue
+speed.BackgroundColor3 = Color3.fromRGB(35, 0, 0)
+speed.BorderColor3 = Color3.fromRGB(200, 0, 0)
 speed.Position = UDim2.new(0.51, 0, 0.62, 0)
 speed.Size = UDim2.new(0, 60, 0, 40)
 speed.Font = Enum.Font.Code
 speed.Text = "1"
-speed.TextColor3 = Color3.fromRGB(80, 180, 255) -- Changed to light blue
+speed.TextColor3 = Color3.fromRGB(255, 80, 80)
 speed.TextScaled = true
 speed.TextStrokeTransparency = 0.6
-speed.TextStrokeColor3 = Color3.fromRGB(0, 120, 200) -- Changed to medium blue
+speed.TextStrokeColor3 = Color3.fromRGB(200, 0, 0)
 local speedCorner = Instance.new("UICorner")
 speedCorner.CornerRadius = UDim.new(0, 8)
 speedCorner.Parent = speed
@@ -133,7 +133,7 @@ styleButton(minus)
 -- Window Controls
 closebutton.Name = "Close"
 closebutton.Parent = titleBar
-closebutton.BackgroundColor3 = Color3.fromRGB(0, 70, 140) -- Changed to medium-dark blue
+closebutton.BackgroundColor3 = Color3.fromRGB(90, 0, 0)
 closebutton.Size = UDim2.new(0, 28, 0, 28)
 closebutton.Position = UDim2.new(1, -33, 0, 3)
 closebutton.Text = "X"
@@ -148,8 +148,8 @@ local nowe = false
 
 -- Notification
 game:GetService("StarterGui"):SetCore("SendNotification", { 
-    Title = "BLUE FLY V1";
-    Text = "BY BIDZZ";
+    Title = "RED FLY V1";
+    Text = "BY NoobzyScripter";
     Icon = "rbxthumb://type=Asset&id=5107182114&w=150&h=150";
     Duration = 5;
 })
@@ -288,7 +288,7 @@ onof.MouseButton1Down:Connect(function()
                 if speed < 0 then speed = 0 end
             end
             if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
-                bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVectorhellip; * (ctrl.f+ctrl.b)) + 
+                bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + 
                               ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - 
                                game.Workspace.CurrentCamera.CoordinateFrame.p)) * speed
                 lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
