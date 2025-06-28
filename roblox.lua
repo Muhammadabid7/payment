@@ -16,6 +16,36 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.IgnoreGuiInset = true -- Ensure GUI respects screen boundaries
 ScreenGui.ResetOnSpawn = false -- Prevent GUI from resetting on player respawn
 
+-- Credit Label
+local CreditLabel = Instance.new("TextLabel")
+CreditLabel.Parent = ScreenGui
+CreditLabel.Size = UDim2.new(0, 200, 0, 30)
+CreditLabel.Position = UDim2.new(0, 20, 1, -50) -- Sedikit menjauh dari pojok kiri bawah
+CreditLabel.BackgroundTransparency = 1
+CreditLabel.Text = "BY BIDZZ OFFICIAL 🇮🇩"
+CreditLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+CreditLabel.Font = Enum.Font.Code
+CreditLabel.TextSize = 16
+CreditLabel.TextStrokeTransparency = 0.7
+CreditLabel.TextStrokeColor3 = Color3.fromRGB(128, 0, 255)
+CreditLabel.ZIndex = 10
+
+-- Tambahkan UIStroke untuk efek glow
+local creditGlow = addGlow(CreditLabel)
+
+-- Animasi transisi warna dan glow berulang
+local function animateCredit()
+    TweenService:Create(CreditLabel, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        TextColor3 = Color3.fromRGB(128, 0, 255) -- Berpindah ke ungu
+    }):Play()
+    TweenService:Create(creditGlow, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        Transparency = 0.1,
+        Thickness = 2
+    }):Play()
+end
+
+animateCredit()
+
 -- Loading Screen
 local function createLoadingScreen()
     local LoadingFrame = Instance.new("Frame")
