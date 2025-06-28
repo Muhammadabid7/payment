@@ -149,7 +149,7 @@ local nowe = false
 -- Notification
 game:GetService("StarterGui"):SetCore("SendNotification", { 
     Title = "RED FLY V1";
-    Text = "BY NoobzyScripter";
+    Text = "BY BIDZZ OFFICIAL 🇮🇩";
     Icon = "rbxthumb://type=Asset&id=5107182114&w=150&h=150";
     Duration = 5;
 })
