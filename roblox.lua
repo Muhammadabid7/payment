@@ -37,7 +37,7 @@ local function createLoadingScreen()
     LoadingText.Size = UDim2.new(0, 500, 0, 80)
     LoadingText.Position = UDim2.new(0.5, -250, 0.5, -40)
     LoadingText.BackgroundTransparency = 1
-    LoadingText.Text = "BY BIDZZ OFFICIAL 🇮🇩"
+    LoadingText.Text = "Bidzz Mod Loading..."
     LoadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
     LoadingText.Font = Enum.Font.Code
     LoadingText.TextSize = 40
@@ -289,7 +289,7 @@ InputLayout.SortOrder = Enum.SortOrder.LayoutOrder
 InputLayout.Padding = UDim.new(0, 8)
 InputLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local SpeedBox = Instance.new("Walk Speed")
+local SpeedBox = Instance.new("WalkSpeed")
 SpeedBox.Parent = InputFrame
 SpeedBox.Size = UDim2.new(0, 240, 0, 30)
 SpeedBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -302,7 +302,7 @@ SpeedBox.ZIndex = 6
 addUICorner(SpeedBox, 6)
 addGlow(SpeedBox)
 
-local JumpBox = Instance.new("Jump Power")
+local JumpBox = Instance.new("JumpPower")
 JumpBox.Parent = InputFrame
 JumpBox.Size = UDim2.new(0, 240, 0, 30)
 JumpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
