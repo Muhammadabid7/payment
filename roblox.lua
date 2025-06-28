@@ -619,7 +619,7 @@ end)
 local flyEnabled = false
 local flyButton, flyUpdateStatus = createButton(MainFrame, "Fly", Color3.fromRGB(40, 40, 40), function(updateStatus)
     flyEnabled = not flyEnabled
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Muhammadabid7/payment/refs/heads/main/fly.lua"))()
     updateStatus(flyEnabled)
 end)
 
